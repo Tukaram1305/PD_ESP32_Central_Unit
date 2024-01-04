@@ -1,0 +1,3171 @@
+<!DOCTYPE HTML5>
+<html> <!--command line CTRL+SHIFT+P -> life server: change...-->
+<head>
+<title>Esp32 AsyncWS</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="styl.css"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Days+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarpanch:wght@800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+<!--font awesome-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://kit.fontawesome.com/5f5c33d332.js" crossorigin="anonymous"></script> <!--MOj klucz FA5-->
+
+<!--jquery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+	<div id="fxWhite"></div>
+	<div class="banner" id="banner"></div>
+	
+<div class="confitmQestion" id="confitmQestion">
+	<div id="saveQ">Nadpisać ustawienia?</div>
+	<div class="verticalCenteredDiv" id="saveQuestion">
+	<div><button type="button" class="btn4long" id="qYes" value="1" onclick="presSaveQuestion(event)">Tak</button></div>
+	<div><button type="button" class="btn4long" id="qNo" value="0" onclick="presSaveQuestion(event)">Nie</button></div>
+	</div>
+</div>
+
+<header id="HEADER">
+<i class="fa fa-sliders"></i>  ESP32 Smart Home Platform
+</header>
+
+<!-- NAWIGACJA GORNA----------------------------------------------------------->
+  <div id="nav">
+	<div class="items" id="it1">Czujniki</div>
+	<div class="items" id="it2">Sterowanie</div>
+	<div class="items" id="it0">Energia</div>
+	<div class="items" id="it3">Ustawienia</div>
+	<div class="items" id="MUTATE" style="width: 10%;" onclick="EDIT(event)"><i class="fa fa-edit"></i></div> <!--fa fa-close	
+	-->
+  </div>
+
+<div id="content">
+
+<!--Strona 1--------------CZUJNIKI-------------------------------------------------------------------------------------------------->
+<!--dodatki / info-->
+<div class="elem firstMenu">
+	<div class="elem_head">Aktualizacja<br>T/C/W</div>
+	<i class="fa fa-refresh mainIcons" style="font-size:48px;color:rgb(18, 236, 164)"></i>
+	<div id="updTime" class="VALL_DISP">...</div>
+</div>
+
+<div class="elem firstMenu">
+	<div class="elem_head">Danych <br>ESP-FLASH</div>
+	<i class="fas fa-database mainIcons" style="font-size:48px;color:rgb(58, 58, 58)"></i>
+	<div id="dNumHolder" class="VALL_DISP">...</div>
+</div>
+
+<!--Czujniki - pomieszczenie-->
+<div class="elem firstMenu">
+	<div class="elem_head">Temperatura</div>
+	<i class="fas fa-temperature-high mainIcons" style="font-size:48px;color:rgb(45, 63, 230)"></i>
+	<div id="tempholder" class="VALL_DISP">...</div>
+	<div id="outtempholder" style="color: white; font-size: 16px;">...</div>
+	<div class="wrap">
+		<iframe class="frame" id="iframe_3" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1896531/charts/1?api_key=KAVY2CTBSNZLH71G&bgcolor=%ffffff&color=%23d62020&days=1&dynamic=true&title=Temperatura&type=line"></iframe>
+	</div>
+</div>
+
+<div class="elem firstMenu">
+	<div class="elem_head">Wilgotność</div>
+	<i class="fa fa-percent mainIcons" style="font-size:48px;color:rgb(6, 114, 39)"></i>
+
+	<div id="humholder" class="VALL_DISP">...</div>
+	
+	<div class="chrtSpanSelect">
+		<div id="hum_day1" class="daysSelector" onclick="chngChartDays(event)">1 dzień</div>
+		<div id="hum_day2" class="daysSelector" onclick="chngChartDays(event)">2 dni</div>
+		<div id="hum_day3" class="daysSelector" onclick="chngChartDays(event)">3 dni</div>
+	</div>
+	<div class="wrap">
+	<iframe class="frame" id="iframe_1" style="display: block; border: 1px solid #cccccc;" src="blank"></iframe>
+	</div>
+</div>
+
+<div class="elem firstMenu">
+	<div class="elem_head">Ciśnienie</div>
+	<i class="fa fa-bar-chart mainIcons" style="font-size:48px;color:rgb(211, 69, 51)"></i>
+
+	<div id="pressholder" class="VALL_DISP">...</div>
+	<div class="wrap">
+		<iframe class="frame" id="iframe_2" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1896531/charts/2?api_key=KAVY2CTBSNZLH71G&bgcolor=%ffffff&color=%23d62020&days=1&dynamic=true&title=Cisnienie&type=line"></iframe>
+	</div>
+</div>
+
+<!--Czujniki - kotlownia-->
+<div class="elem firstMenu">
+	<div class="elem_head">Temp. CO</div>
+	<i class="fa fa-thermometer-half mainIcons" style="font-size:48px;color:rgb(250, 195, 76)"></i>
+
+	<div id="COTempHolder" class="VALL_DISP">...</div>
+</div>
+
+<div class="elem firstMenu">
+	<div class="elem_head">LPG/Dym</div>
+	<i id="styled_icon" class="fas fa-skull-crossbones mainIcons" style="font-size:48px;"></i>
+
+	<div id="BRGasHolder" class="VALL_DISP">...</div>
+</div>
+
+<!--strona 2--------------STEROWANIE--------------------------------------------------------------------------------------------->
+
+<!-- OSWIETLENIE - RGB LED -->
+<div class="wideElem elem secMenu">
+<input class="mutableInputTxt" type="text" id="devTxt_4" value="RGB LED Strip">
+	<div class="parent">
+		<div class="LED_BG" id="LED1_BG"></div>
+		<div class="LED_FG" style="padding:5px;"><i id="led1" onclick="turnOffLed('LED1')" class="fa fa-lightbulb-o mainIcons" style="font-size:32px;">off</i>
+		</div>
+	</div>
+	<div class="ledVal" id="LEDval1">KOLOR</div>
+	<!--Input przy duzej rozdzielczosci-->
+	<input id="inpLED1" name="inpLED1" class="colorPick" type="color" value="#FFCC00" >
+	<!--Input przy malej rozdzielczosci-->
+	<canvas id="LED1Hue" class="HSL_CAN"></canvas>
+	<input id="LED1_H" class="HSL_CAN slider" type="range" min="0" max="255" value="0" >
+	<canvas id="LED1Sat" class="HSL_CAN"></canvas>
+	<input id="LED1_S" class="HSL_CAN slider" type="range" min="0" max="255" value="255" >
+	<canvas id="LED1Val" class="HSL_CAN"></canvas>
+	<input id="LED1_V" class="HSL_CAN slider" type="range" min="0" max="255" value="128" >
+	<!--Predefiniowane kolory-->
+	<div class="userColors">
+
+		<div class="usrColContainer">
+			<div id="LED1_K1_V" class="usrColHolder" onclick="loadFavColor('LED1',1)"><div class="favColTxt">#K1</div></div>
+			<div id="LED1_K1_S" class="usrColSaveBtn" onclick="setFavColCookie('LED1',240,1)">Zapisz</div>
+		</div>
+		<div class="usrColContainer">
+			<div id="LED1_K2_V" class="usrColHolder" onclick="loadFavColor('LED1',2)"><div class="favColTxt">#K2</div></div>
+			<div id="LED1_K2_S" class="usrColSaveBtn" onclick="setFavColCookie('LED1',240,2)">Zapisz</div>
+		</div>
+		<div class="usrColContainer">
+			<div id="LED1_K3_V" class="usrColHolder" onclick="loadFavColor('LED1',3)"><div class="favColTxt">#K3</div></div>
+			<div id="LED1_K3_S" class="usrColSaveBtn" onclick="setFavColCookie('LED1',240,3)">Zapisz</div>
+		</div>
+		<div class="usrColContainer">
+			<div id="LED1_K4_V" class="usrColHolder" onclick="loadFavColor('LED1',4)"><div class="favColTxt">#K4</div></div>
+			<div id="LED1_K4_S" class="usrColSaveBtn" onclick="setFavColCookie('LED1',240,4)">Zapisz</div>
+		</div>
+	</div>		
+</div>
+		
+	<!--Przekaznik #1 - 230V -->
+	<div class="elem secMenu">
+	<input class="mutableInputTxt" type="text" id="devTxt_1" value="Relay 230V">
+		<div class="parent">
+			<i id ="sw1" class="fa fa-power-off mainIcons" style="font-size:32px;"></i><br>
+		</div>
+			<label class="switch">
+			<input name="input1" id="chk1" type="checkbox" value="RELAY_1" onchange="sendSwitch()" >
+			<span class="sliderTGL round"></span>
+			</label> 
+			<div class="VALL_DISP" id="chkbox1">OFF</div>
+	</div>
+
+	<!--Przekaznik #2 - 12/24 V regulator-->
+	<div class="elem secMenu">
+		<input class="mutableInputTxt" type="text" id="devTxt_2" value="Relay 12/24V">
+			<div class="parent">
+				<i id ="sw2" class="fa fa-power-off mainIcons" style="font-size:32px;"></i><br>
+			</div>
+				<label class="switch">
+				<input name="input1" id="chk2" type="checkbox" value="RELAY_2" onchange="sendSwitch2()" >
+				<span class="sliderTGL round"></span>
+				</label> 
+				<div class="VALL_DISP" id="chkbox2">OFF</div>
+		</div>
+
+	<!--Oswietlenie - White LED-->
+	<div class="wideElem elem secMenu">
+		<input class="mutableInputTxt" type="text" id="devTxt_3" value="Main W-LED">
+		<div class="parent">
+			<div class="LED_BG"></div>
+			<div class="LED_FG" style="padding:5px; color:white"><i class="fa fa-signal mainIcons" style="font-size:32px; color:black;"></i></div>
+		</div> 
+		<div class="VALL_DISP" id="oneLedRangeValDisp" >OFF</div>
+		<input class="slider" type="range" min="0" max="1023" value="512" id="oneLedRangeVal" onchange="sendOneLEDVal()" oninput="updOneLEDVal()">
+	</div>
+
+	<!-- OSWIETLENIE 3x LED   @1-->
+	<div class="elem secMenu">
+		<input class="mutableInputTxt" type="text" id="devTxt_5" value="M.LED D/Ś">
+		<div class="parent">
+			<div class="LED_BG" id="LEDs11_bg"></div>
+			<div class="LED_FG" style="padding:5px; color:white"><i id="led11" class="fa fa-lightbulb-o mainIcons" style="font-size:32px;"></i></div>
+		</div>
+		<div id="LEDs11_val" class="VALL_MINOR_TXT">Wył.</div>
+	<input id="LEDs11_inp" name="LEDs11_inp" class="colorPick" type="color" value="#000000" oninput="updateLED('LEDs11')">
+	<button type="button" class="btn2" value="#000000" onclick="LEDsOFF('LEDs11')">OFF</button>
+	</div>
+	<!-- OSWIETLENIE @2-->
+	<div class="elem secMenu">
+		<input class="mutableInputTxt" type="text" id="devTxt_6" value="M.LED D/P">
+		<div class="parent">
+			<div class="LED_BG" id="LEDs12_bg"></div>
+			<div class="LED_FG" style="padding:5px; color:white"><i id="led12" class="fa fa-lightbulb-o mainIcons" style="font-size:32px;"></i></div>
+		</div> 
+		<div id="LEDs12_val" class="VALL_MINOR_TXT">Wył.</div>
+	<input id="LEDs12_inp" name="LEDs12_inp" class="colorPick" type="color" value="#000000" oninput="updateLED('LEDs12')">
+	<button type="button" class="btn2" value="#000000" onclick="LEDsOFF('LEDs12')">OFF</button>
+	</div>
+	<!-- OSWIETLENIE @3-->
+	<div class="elem secMenu">
+		<input class="mutableInputTxt" type="text" id="devTxt_7" value="M.LED Ś">
+		<div class="parent">
+			<div class="LED_BG" id="LEDs13_bg"></div>
+			<div class="LED_FG" style="padding:5px; color:white"><i id="led13" class="fa fa-lightbulb-o mainIcons" style="font-size:32px;"></i></div>
+		</div>
+		<div id="LEDs13_val" class="VALL_MINOR_TXT">Wył.</div>
+	<input id="LEDs13_inp" name="LEDs13_inp" class="colorPick" type="color" value="#000000" oninput="updateLED('LEDs13')">
+	<button type="button" class="btn2" value="#000000" onclick="LEDsOFF('LEDs13')">OFF</button>
+	</div>
+
+		<!--Oswietlenie - MODULARNE 6x WLED  / 8x SERVO / 2x RGB_LED--------<div class="break"></div>------------------------------------------------------------->
+		<!--
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #1</div>
+				<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+					&#9899; &#9938; &#9938; | &#9938; &#9938; &#9938;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_9" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_6" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_9" oninput="updateModularVals(9)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_6" oninput="updateModularVals(6)">
+				</div>
+			</div>
+		</div>
+		
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #2</div>
+			<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+				&#9938; &#9899; &#9938; | &#9938; &#9938; &#9938;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_10" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_7" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_10" oninput="updateModularVals(10)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_7" oninput="updateModularVals(7)">
+				</div>
+			</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #3</div>
+			<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+				&#9938; &#9938; &#9899; | &#9938; &#9938; &#9938;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_8" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_2" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_8" oninput="updateModularVals(8)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_2" oninput="updateModularVals(2)">
+				</div>
+			</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #4</div>
+			<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+				&#9938; &#9938; &#9938; | &#9899; &#9938; &#9938;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_12" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_3" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_12" oninput="updateModularVals(12)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_3" oninput="updateModularVals(3)">
+				</div>
+			</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #5</div>
+			<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+				&#9938; &#9938; &#9938; | &#9938; &#9899; &#9938;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_11" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_4" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_11" oninput="updateModularVals(11)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_4" oninput="updateModularVals(4)">
+				</div>
+			</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT #6</div>
+			<div class="parent" style="font-size:12px; padding-bottom: 5px;">
+				&#9938; &#9938; &#9938; | &#9938; &#9938; &#9899;
+				</div> 
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_13" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_5" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">
+					<input class="sliderVert modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_13" oninput="updateModularVals(13)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_5" oninput="updateModularVals(5)">
+				</div>
+			</div>
+		</div>
+		-->
+				<!--Oswietlenie - MODULARNE 6x WLED  / 8x SERVO / 2x RGB_LED--------<div class="break"></div>------------------------------------------------------------->
+		
+				<div class="elem secMenu">
+					<div class="elem_head">SPOT LIGHTS</div>
+					<div class="VAL_DISP_ROW">
+						<div class="VALL_DISP" id="LMOD_VAL_9" >OFF</div>
+						<div class="VALL_DISP" id="LMOD_VAL_10" >OFF</div>
+						<div class="VALL_DISP" id="LMOD_VAL_8" >OFF</div>
+						<div class="VALL_DISP" id="LMOD_VAL_12" >OFF</div>
+						<div class="VALL_DISP" id="LMOD_VAL_11" >OFF</div>
+						<div class="VALL_DISP" id="LMOD_VAL_13" >OFF</div>
+					</div>
+
+					<div class="DOUBLESLIDER">
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_9" oninput="updateModularVals(9)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_10" oninput="updateModularVals(10)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_8" oninput="updateModularVals(8)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_12" oninput="updateModularVals(12)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_11" oninput="updateModularVals(11)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertX modularL" type="range" min="0" max="4095" value="0" id="LMOD_LED_13" oninput="updateModularVals(13)">
+						</div>
+					
+					</div>
+				</div>
+				
+				<div class="elem secMenu">
+					<div class="elem_head">SPOT SERVOS</div>
+						<div class="VAL_DISP_ROW">
+							<div class="VALL_DISP" id="LMOD_VAL_6" >SER</div>
+							<div class="VALL_DISP" id="LMOD_VAL_7" >SER</div>
+							<div class="VALL_DISP" id="LMOD_VAL_2" >SER</div>
+							<div class="VALL_DISP" id="LMOD_VAL_3" >SER</div>
+							<div class="VALL_DISP" id="LMOD_VAL_4" >SER</div>
+							<div class="VALL_DISP" id="LMOD_VAL_5" >SER</div>
+						</div>
+					<div class="DOUBLESLIDER">
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_6" oninput="updateModularVals(6)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_7" oninput="updateModularVals(7)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_2" oninput="updateModularVals(2)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_3" oninput="updateModularVals(3)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_4" oninput="updateModularVals(4)">
+						</div>
+						<div class="slidecontainerVert">
+							<input class="sliderVertSerX modularL" type="range" min="160" max="900" value="530" id="LMOD_SER_5" oninput="updateModularVals(5)">
+						</div>
+
+					</div>
+				</div>
+
+		<!-- OSW. MODULARNE-->
+		<div class="elem secMenu">
+			<div class="elem_head">ALL SPOT</div>
+
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_AL" >OFF</div><div class="VALL_DISP" id="LMOD_VAL_AS" >SER</div></div>
+			<div class="DOUBLESLIDER">
+				<div class="slidecontainerVert">	<!-- Listenery sa przypinane dla zaszlej zmiany, 'update' tutaj aktualizuje dynamicznie wartosci wyswietlane-->
+					<input class="sliderVert modularLA" type="range" min="0" max="4095" value="0" id="LMOD_LED_AL" oninput="updateAllModularVals(0)">
+				</div>
+				<div class="slidecontainerVert">
+					<input class="sliderVertSer modularLA" type="range" min="160" max="900" value="900" id="LMOD_SER_AS" oninput="updateAllModularVals(1)">
+				</div>
+			</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">SPOT LED ARMS</div>
+				<div class="VAL_DISP_ROW"><div class="VALL_DISP" id="LMOD_VAL_0" >R</div><div class="VALL_DISP" id="LMOD_VAL_1" >L</div></div>
+			<div class="DOUBLESLIDER">
+					<input class="slider modularL" type="range" min="220" max="850" value="535" id="LMOD_ARM_0" oninput="updateModularVals(0)">|
+					<input class="slider modularL" type="range" min="220" max="850" value="535" id="LMOD_ARM_1" oninput="updateModularVals(1)">
+
+			</div>
+			LEFT | RIGHT 
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">RGB UP/DW</div>
+				<div class="VALL_DISP" id="LMOD_RGB_1" onclick="turnOffModRGB('up')">UP (off)</div>
+				<input type="color" value="#000000" style="width:100%; height: 40px;" id="MODRGB_1">
+				<input type="color" value="#000000" style="width:100%; height: 40px;" id="MODRGB_2">
+				<div class="VALL_DISP" id="LMOD_RGB_2" onclick="turnOffModRGB('dw')">DW (off)</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">MOD SET</div>
+				<button type="button" class="btn1 BTNMODIFIER" value="1" style="width:100%;" id="MODSET_1">FULL</button>
+				<button type="button" class="btn1 BTNMODIFIER" value="2" style="width:100%;" id="MODSET_2">OFF</button>
+				<button type="button" class="btn1 BTNMODIFIER" value="3" style="width:100%;" id="MODSET_3">RAND</button>
+				<button type="button" class="btn1 BTNMODIFIER" value="4" style="width:100%;" id="MODSET_4">ALL RND</button>
+				<button type="button" class="btn1 BTNMODIFIER" value="5" style="width:100%;" id="MODSET_5">RGB RND</button>
+		</div>
+
+		<!--PRESETY USTAWIEN MOD LIGHt-->
+		<div class="elem secMenu">
+			<div class="elem_head">ModLight Presets</div>
+
+				<div class="roomSubVertical">
+				<div class="numericalOrderDisp">0</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName0" value="s0">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="0" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="0" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+				<div class="numericalOrderDisp">1</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName1" value="s1">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="1" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="1" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+				
+				<div class="roomSubVertical">
+				<div class="numericalOrderDisp">2</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName2" value="s2">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="2" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="2" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+				<div class="numericalOrderDisp">3</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName3" value="s3">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="3" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="3" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+					<div class="numericalOrderDisp">4</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName4" value="s4">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="4" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="4" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+					<div class="numericalOrderDisp">5</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName5" value="s5">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="5" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="5" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+					<div class="numericalOrderDisp">6</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName6" value="s6">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="6" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="6" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+
+				<div class="roomSubVertical">
+				<div class="numericalOrderDisp">7</div>
+				<input class="mutableInputTxt2 PRESETMODIFIER" type="text" maxlength="15" id="slotName7" value="s7">
+				<button type="button" class="btn3 BTN_MODL_PRESET_LOAD" value="7" style="width:100%;" id="">Load  <i class="fa fa-cloud-upload"></i></button>
+				<div style="width: 40px;"></div>
+				<button type="button" class="btn3 BTN_MODL_PRESET_SAVE" value="7" style="width:50%;" id="">S <i class="fa fa-cloud-download"></i></button>
+				</div>
+		</div>
+
+		<div class="elem secMenu">
+			<div class="elem_head">RGB Effects</div>
+				<label class="containerCHKBX">RainbowFX
+				<input type="checkbox" class="" id="RGB_RainbowFxSwitch" value="0" onchange="RgbFxInpSetONOFF(event)" >
+				<span class="checkmarkCHKBX"></span>
+				</label>
+				<div class="VALL_DISP_Mini" id="RGBFXS1_d" >HUE Offset</div>
+				<input class="sliderMini" type="range" min="0" max="255" value="128" id="RGBFXS1" onchange="RgbFxInpSet(event)" oninput="RgbFxInputs(event)">
+				<div class="VALL_DISP_Mini" id="RGBFXS2_d" >Speed</div>
+				<input class="sliderMini" type="range" min="0" max="500" value="200" id="RGBFXS2" onchange="RgbFxInpSet(event)" oninput="RgbFxInputs(event)">
+				<div class="VALL_DISP_Mini" id="RGBFXS3_d" >Lightness</div>
+				<input class="sliderMini" type="range" min="0" max="255" value="128" id="RGBFXS3" onchange="RgbFxInpSet(event)" oninput="RgbFxInputs(event)">
+		</div>
+		<!--MODULAR END -------------------------------------------- - - - - - - - - - - - -->
+
+<!--Strona 0 Energia-------NIE UZYWAWENE, MALO CZYTELNE-----------------------------------------------------------------------
+<div class="roomContainer fourMenu enePC">
+	<div class="room_head" id="ene1_head">Energia LED</div>
+	<div class="roomSubContainer">
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Czynna</div>
+	<i class="fa" style="color:#BE7241">W</i>
+	<div id="E1_PC1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Bierna</div>
+	<i class="fa" style="color:#418DBE">WR</i>
+	<div id="E1_PB1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Pozorna</div>
+	<i class="fa" style="color:#BF405A">VA</i>
+	<div id="E1_PP1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">P.F.</div>
+	<i class="fa" style="color:#40BFA5">%</i>
+	<div id="E1_PF1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Napięcie</div>
+	<i class="fa" style="color:#C6398D">V</i>
+	<div id="E1_V1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Prąd</div>
+	<i class="fa" style="color:#39C672">Amp</i>
+	<div id="E1_C1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Energia</div>
+	<i class="fa" style="color:#CE31BE">E</i>
+	<div id="E1_E1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Częstotliwość</div>
+	<i class="fa" style="color:#31CE41">Hz</i>
+	<div id="E1_F1" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Koszt</div>
+	<i class="fa" style="color:#AA26D9">$</i>
+	<div id="E1_COST1" class="VALL_DISP">...</div>
+	<div id="E1_LE1" class="" style="color:rgb(233, 125, 53); font-size: 22px;">...</div>
+</div>	
+	
+
+</div></div>
+
+ENERGIA DWA +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+<div class="roomContainer fourMenu enePC">
+	<div class="room_head" id="ene2_head">Energia PC</div>
+	<div class="roomSubContainer">
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Czynna</div>
+	<i class="fa" >W</i>
+	<div id="E1_PC2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Bierna</div>
+	<i class="fa" >WR</i>
+	<div id="E1_PB2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Moc Pozorna</div>
+	<i class="fa" >VA</i>
+	<div id="E1_PP2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">P.F.</div>
+	<i class="fa" >%</i>
+	<div id="E1_PF2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Napięcie</div>
+	<i class="fa" >V</i>
+	<div id="E1_V2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Prąd</div>
+	<i class="fa" >Amp</i>
+	<div id="E1_C2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Energia</div>
+	<i class="fa" >E</i>
+	<div id="E1_E2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Częstotliwość</div>
+	<i class="fa" >Hz</i>
+	<div id="E1_F2" class="VALL_DISP">...</div>
+</div>	
+
+<div class="elem fourMenu">
+	<div class="elem_head">Koszt</div>
+	<i class="fa" >$</i>
+	<div id="E1_COST2" class="VALL_DISP">...</div>
+	<div id="E1_LE2" class="" style="color:rgb(233, 125, 53); font-size: 22px;">...</div>
+</div>	
+		
+</div></div>
+-->
+
+<!--TABELARYCZNE, BARDZIEJ CZYTELNE-->
+<table style="width:100%" class=" enePHONE">
+	<tr>
+		<th>PARAM</th>
+		<th></th>
+		<th>ENERGIA PC</th>
+		<th>ENERGIA LED</th>
+	</tr>
+	<tr>
+		<td><font size="4px">MOC (czynna)<br>(pozorna)<br>(bierna)</font></td>
+		<td>W</td>
+		<td>
+			<div id="E1_PCt2">CZYNNA</div>
+			<div id="E1_PPt2">BIERNA</div>
+			<div id="E1_PBt2">POZORNA</div>
+			
+			<!--
+			<div class="wrap">
+				<div class="frame"><iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2117004/charts/3?api_key=ZMCVVWSFHU0NGJ2Z&bgcolor=%23ffffff&color=%23d62020&days=2&dynamic=true&title=Moc+%28W%29&type=line&xaxis=Czas&yaxis=Watt"></iframe></div>
+
+			</div>
+		-->
+		</td>
+		<td>
+			<div id="E1_PCt1">CZYNNA</div>
+			<div id="E1_PPt1">BIERNA</div>
+			<div id="E1_PBt1">POZORNA</div>
+		</td>
+
+	</tr>
+	<tr>
+		<td>ENERGIA</td>
+		<td>E</td>
+		<td>
+			<div id="E1_Et2" class="tab_subtxt2"></div>
+			<div id="E1_Ettxt2" class="tab_subtxt1"></div>
+		</td>
+		<td>
+			<div id="E1_Et1" class="tab_subtxt2"></div>
+			<div id="E1_Ettxt1" class="tab_subtxt1"></div>
+		</td>
+
+	</tr>
+	<tr>
+		<td>KOSZT</td>
+		<td>$</td>
+		<td id="E1_COSTt2"></td>
+		<td id="E1_COSTt1"></td>
+
+	</tr>
+	<tr>
+		<td>PF</td>
+		<td>%</td>
+		<td id="E1_PFt2"></td>
+		<td id="E1_PFt1"></td>
+
+	</tr>
+	<tr>
+		<td>PRĄD</td>
+		<td>A</td>
+		<td id="E1_Ct2"></td>
+		<td id="E1_Ct1"></td>
+	</tr>
+	<tr>
+		<td>NAPIĘCIE</td>
+		<td>V</td>
+		<td id="E1_Vt2"></td>
+		<td id="E1_Vt1"></td>
+
+	</tr>
+	<tr>
+		<td colspan="1" style="text-Align: center;"></td>
+		<td colspan="3" style="text-Align: center; color:rgb(231, 198, 126)">WARTOŚCI UŚREDNIONE &#x2211;/&Delta; </td>
+	</tr>
+	<tr>
+		<td>MOC</td>
+		<td>&#x2211;W</td>
+		<td colspan="2" id="E1_PCtMed">...</td>
+	</tr>
+	<tr>
+		<td>ENERGIA</td>
+		<td>&#x2211;E</td>
+		<td colspan="2" id="E1_EtMed">...</td>
+	</tr>
+	<tr>
+		<td>KOSZT</td>
+		<td>&#x2211;$</td>
+		<td colspan="2" id="E1_COSTtMed">...</td>
+	</tr>
+	<tr>
+		<td>PF</td>
+		<td>&Delta;%</td>
+		<td colspan="2" id="E1_PFtMed">...</td>
+	</tr>
+	<tr>
+		<td>PRĄD</td>
+		<td>&#x2211;A</td>
+		<td colspan="2" id="E1_CtMed">...</td>
+	</tr>
+	<tr>
+		<td>NAPIĘCIE</td>
+		<td>&Delta;V</td>
+		<td colspan="2" id="E1_VtMed">...</td>
+	</tr>
+  </table>
+
+  <!-- WYKRESOWO Z TS-->
+  <div class="elem fourMenu">
+	<div class="elem_head">MOC PC</div>
+	<div class="wrap">
+		<iframe class="frame" id="iframe_e1" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/2117004/charts/3?api_key=ZMCVVWSFHU0NGJ2Z&bgcolor=%ffffff&color=%23d62020&days=1&dynamic=true&title=Moc&type=line"></iframe>
+	</div>
+</div>
+
+<!--Strona 4-------------------USTAWIENIA------------------------------------------------------------------------------------------->
+<div class="roomContainer thirdMenu">
+	<div class="room_head">Cz. zap. ESP-NVM</div>
+		<div class="roomSubContainer">
+			<div class="elem">
+				<div class="elem_head">Ustawiona</div>
+				<i class="fas fa-hourglass-half mainIcons" style="font-size:48px;color:rgb(209, 66, 66)"></i>
+				<div id="refFreqHolder" class="VALL_DISP">...</div>
+			</div>
+	
+			<div class="elem">
+				<div class="elem_head">Nowa</div>
+				<i class="fa fa-clock-o mainIcons" style="font-size:48px;color:rgb(53, 53, 53)"></i>
+				<div><input class="numInputVal1" type="number" min="1" step="1" value="" id="refFreq" onchange="getSendRefFrequency('1')"> Min.</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+	<div class="room_head">Cz. wys. do Thingspeak</div>
+		<div class="roomSubContainer">
+			<div class="elem">
+				<div class="elem_head">Ustawiona</div>
+				<i class="fas fa-hourglass-half mainIcons" style="font-size:48px;color:rgb(209, 66, 66)"></i>
+				<div id="refFreqTSHolder" class="VALL_DISP">...</div>
+			</div>
+	
+			<div class="elem">
+				<div class="elem_head">Nowa</div>
+				<i class="fa fa-clock-o mainIcons" style="font-size:48px;color:rgb(53, 53, 53)"></i>
+				<div><input class="numInputVal1" type="number" min="1" step="1" value="" id="refTSFreq" onchange="getSendRefTSFrequency('1')"> Min.</div>
+			</div>	
+		</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+	<div class="room_head">Tło</div>
+			<div class="elem">
+				<label class="container">Light
+					<input class="visuals" type="radio" name="v_bgSelect" checked="checked" value="1">
+					<span class="checkmark"></span>
+					</label>
+					
+					<label class="container">Sparks
+					<input class="visuals" type="radio" name="v_bgSelect"  value="2">
+					<span class="checkmark"></span>
+					</label>
+					
+					<label class="container">Digital
+					<input class="visuals" type="radio" name="v_bgSelect"  value="3">
+					<span class="checkmark"></span>
+					</label>
+					
+					<label class="container">Space
+					<input class="visuals" type="radio" name="v_bgSelect"  value="4">
+					<span class="checkmark"></span>
+					</label>
+			</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+		<div class="room_head">Strona startowa</div>
+			<div class="elem">
+				<label class="container">Czujniki
+					<input class="startSite" type="radio" name="v_startSite" checked="checked" value="1">
+					<span class="checkmark"></span>
+					</label>
+					
+					<label class="container">Sterowanie
+					<input class="startSite" type="radio" name="v_startSite"  value="2">
+					<span class="checkmark"></span>
+					</label>
+					
+					<label class="container">Energia
+					<input class="startSite" type="radio" name="v_startSite"  value="3">
+					<span class="checkmark"></span>
+					</label>
+			</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+	<div class="room_head">Ogr. Spot LED</div>
+			<div class="elem">
+				<label class="container">100%
+				<input class="spotRes" type="radio" name="v_spotRes" checked="checked" value="4095">
+				<span class="checkmark"></span>
+				</label>
+				
+				<label class="container">50%
+				<input class="spotRes" type="radio" name="v_spotRes"  value="2048">
+				<span class="checkmark"></span>
+				</label>
+				
+				<label class="container">25%
+				<input class="spotRes" type="radio" name="v_spotRes"  value="1024">
+				<span class="checkmark"></span>
+				</label>
+
+				<label class="container">12,5%
+				<input class="spotRes" type="radio" name="v_spotRes"  value="512">
+				<span class="checkmark"></span>
+				</label>
+				<label class="container">5%
+				<input class="spotRes" type="radio" name="v_spotRes"  value="205">
+				<span class="checkmark"></span>
+				</label>
+			</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+		<div class="room_head">Narzędzia</div>
+			<div class="elem">
+				<label class="containerCHKBX">Pok. Odp. HTTP
+				<input type="checkbox" class="globSettings" id="GLB_1" value="1" checked="checked">
+				<span class="checkmarkCHKBX"></span>
+				</label>
+				
+				<label class="containerCHKBX">Pok. Debug(!)
+				<input type="checkbox">
+				<span class="checkmarkCHKBX"></span>
+				</label>
+				
+				<label class="containerCHKBX">. . .
+				<input type="checkbox">
+				<span class="checkmarkCHKBX"></span>
+				</label>
+			</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+	<div class="room_head">Op. Reg. SPOT Led</div>
+		<div class="roomSubContainer">
+			<div class="elem">
+				<div class="elem_head">Ustawiona</div>
+				<i class="fas fa-hourglass-half mainIcons" style="font-size:48px;color:rgb(209, 66, 66)"></i>
+				<div id="modUsLEDcurr" class="VALL_DISP">...</div>
+			</div>
+	
+			<div class="elem">
+				<div class="elem_head">Nowa</div>
+				<i class="fa fa-clock-o mainIcons" style="font-size:48px;color:rgb(53, 53, 53)"></i>
+				<div><input class="numInputVal1" type="number" min="10" max="50000" step="10" value="" id="modUsLED" onchange="getSendModUs('1','led')"> mS</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="roomContainer thirdMenu">
+		<div class="room_head">Op. Reg. SPOT Serv</div>
+			<div class="roomSubContainer">
+				<div class="elem">
+					<div class="elem_head">Ustawiona</div>
+					<i class="fas fa-hourglass-half mainIcons" style="font-size:48px;color:rgb(209, 66, 66)"></i>
+					<div id="modUsSERcurr" class="VALL_DISP">...</div>
+				</div>
+		
+				<div class="elem">
+					<div class="elem_head">Nowa</div>
+					<i class="fa fa-clock-o mainIcons" style="font-size:48px;color:rgb(53, 53, 53)"></i>
+					<div><input class="numInputVal1" type="number" min="10" max="50000" step="10" value="" id="modUsSER" onchange="getSendModUs('1','ser')"> &#181;S</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="roomContainer thirdMenu">
+			<div class="room_head">Notes</div>
+			<textarea id="notes" value="noteczki" class="mutableInputTxt" name="notes" rows="5" cols="24" wrap="soft" spellcheck="false"></textarea>
+
+		</div>
+
+</div> <!--content-->
+
+<div id="phone">
+	<div class="items active" id="p_left">SENSORS</div>
+	<div class="items" id="p_mid">CNTRL</div>
+	<div class="items" id="p_ene">ENERGY</div>
+	<div class="items" id="p_right">SETT</div>
+	<div class="items" id="MUTATEphone" style="width: 10%;" onclick="EDIT(event)"><i class="fa fa-edit"></i></div>
+	
+</div>
+	<footer id="ftr">
+		ESP
+	</footer>
+</body>
+
+
+<script> // SKRYPT JavaScript+JQuery+AJAX
+// ZMIENNE
+const ESP_IP = "192.168.1.35";
+const ESP_ENERGY_IP1 = "192.168.1.45";
+const ESP_ENERGY_IP2 = "192.168.1.46";
+
+const LED1_HUE = document.getElementById("LED1_H");
+const LED1_SAT = document.getElementById("LED1_S");
+const LED1_VAL = document.getElementById("LED1_V");
+const INP_LED1 = document.getElementById("inpLED1");
+
+var LED_1_HSV = {H:0, S:0, V:0}
+var LED_2_RGB = {R:0, G:0, B:0}
+
+// PRE-WYWOLANIE FUNKCJI
+$(document).ready(function(){
+	loadVisSettings()
+	loadSScookie() // zbierz cookie domyslnej strony uzytkownika
+	aquireDevNames()
+	httpGetData()
+	httpGetCOData()
+	updDataNum()
+	hideMenuAtStart()
+	getSendRefFrequency()
+	getSendRefTSFrequency()
+	getOutTemp()
+	createHSVcan("LED1Hue",'H')
+	createHSVcan("LED1Sat",'S')
+	createHSVcan("LED1Val",'V')
+	getFavColors('LED1')
+	httpGetPower('1')
+	httpGetPower('2')
+	getSendModUs('0','led') // led jest tu niewazne
+	getModularCurrStates() // aktualne paramy z MODULAR SPOT
+
+});
+
+/*
+setInterval(function(){
+	var state = document.getElementById("iframe_1").style.display
+	console.log("stan: "+state)
+	if (state=="block") document.getElementById("iframe_1").style.display = "none"
+	else document.getElementById("iframe_1").style.display = "block"
+}, 1500)
+*/
+
+// INTERWALY
+setInterval(function (){if (currSite==1)httpGetData()},10000);
+setInterval(function (){if (currSite==1)httpGetCOData()},5000);
+setInterval(function(){if (currSite==1)updDataNum()},1000*300);
+setInterval(function (){if (currSite==1)getOutTemp()},5000);
+// INT. dla ENERGI
+const ENERGY_UPDATE = 2000
+const ENERGY_COST = 0.95
+setInterval(function (){if (currSite==4)httpGetPower('1')},ENERGY_UPDATE);
+setInterval(function (){if (currSite==4)httpGetPower('2')},ENERGY_UPDATE);
+setInterval(function (){if (currSite==4)calcMedians()},ENERGY_UPDATE+250);
+// LISTENER'Y
+document.getElementById("it1").addEventListener("click",navClick)
+document.getElementById("it2").addEventListener("click",navClick)
+document.getElementById("it3").addEventListener("click",navClick)
+document.getElementById("it0").addEventListener("click",navClick)
+
+document.getElementById("p_left").addEventListener("click",navClick)
+document.getElementById("p_mid").addEventListener("click",navClick)
+document.getElementById("p_right").addEventListener("click",navClick)
+document.getElementById("p_ene").addEventListener("click",navClick)
+
+const ts1 = "https://thingspeak.com/channels/1896531/charts/3?api_key=KAVY2CTBSNZLH71G&bgcolor=%ffffff&color=%23d62020&days=1&dynamic=true&title=Wilgotnosc&type=line"
+document.getElementById("iframe_1").src = ts1
+
+// SOUNDS
+//const audioClick = new Audio("https://www.fesliyanstudios.com/play-mp3/387");
+//const audioElectr = new Audio("https://www.fesliyanstudios.com/play-mp3/5253");
+//const audioMag = new Audio("https://www.fesliyanstudios.com/play-mp3/5252");
+//END SOUNDS
+
+// EDYTOWANIE UKLADU STRON
+STER_MENU = document.getElementsByClassName("secMenu") // wszystkie Elementy drugiego menu
+//X_ARRS_STER = document.getElementsByClassName("aSegX")
+
+SENS_MENU = document.getElementsByClassName("firstMenu") // wszystkie Elementy pierwszego menu
+//X_ARRS_SENS = document.getElementsByClassName("aSegX")
+
+SETI_MENU = document.getElementsByClassName("thirdMenu") // wszystkie Elementy tzeciego menu
+//X_ARRS_SETI = document.getElementsByClassName("aSegX")
+
+function createEditables(actMenu)
+{
+
+if (actMenu==1){
+console.log("ELEMENTOW MENU: "+SENS_MENU.length)
+for (var i=0; i<SENS_MENU.length; i++)
+{
+	SENS_MENU[i].id = "MENU1_"+i
+	SENS_MENU[i].style.order = i
+
+	var SEG = document.createElement("DIV")
+	SEG.classList.add("roomSubVerticalArrow")
+
+	var SEGarrL = document.createElement("DIV")
+	var SEGarrR = document.createElement("DIV")
+	var SEGarrX = document.createElement("DIV")
+	SEGarrL.innerHTML = '<i class="fa fa-caret-left"></i>'
+	SEGarrR.innerHTML = '<i class="fa fa-caret-right"></i>'
+	SEGarrX.innerHTML = '<i class="fa fa-eye-slash"></i>'
+	SEGarrL.classList.add("arrowSegment" , "aSegL")
+	SEGarrR.classList.add("arrowSegment" , "aSegR")
+
+	SEGarrX.classList.add("arrowSegment" , "aSegX")
+
+	SEGarrL.addEventListener('click', function (){swapElems(event)})
+	SEGarrR.addEventListener('click', function (){swapElems(event)})
+
+	SEGarrX.id = "Xo_ARR"+actMenu+"_"+i
+	SEGarrX.addEventListener('click', function (){markElemAsHidden(event)})
+
+	SEG.appendChild(SEGarrL)
+	SEG.appendChild(SEGarrX)
+	SEG.appendChild(SEGarrR)
+	SENS_MENU[i].appendChild(SEG)
+}}
+
+if (actMenu==2){
+console.log("ELEMENTOW MENU: "+STER_MENU.length)
+for (var i=0; i<STER_MENU.length; i++)
+{
+	STER_MENU[i].id = "MENU2_"+i
+	STER_MENU[i].style.order = i
+
+	var SEG = document.createElement("DIV")
+	SEG.classList.add("roomSubVerticalArrow")
+
+	var SEGarrL = document.createElement("DIV")
+	var SEGarrR = document.createElement("DIV")
+	var SEGarrX = document.createElement("DIV")
+	SEGarrL.innerHTML = '<i class="fa fa-caret-left"></i>'
+	SEGarrR.innerHTML = '<i class="fa fa-caret-right"></i>'
+	SEGarrX.innerHTML = '<i class="fa fa-eye-slash"></i>'
+	SEGarrL.classList.add("arrowSegment" , "aSegL")
+	SEGarrR.classList.add("arrowSegment" , "aSegR")
+
+	SEGarrX.classList.add("arrowSegment" , "aSegX")
+
+	SEGarrL.addEventListener('click', function (){swapElems(event)})
+	SEGarrR.addEventListener('click', function (){swapElems(event)})
+
+	SEGarrX.id = "Xo_ARR"+actMenu+"_"+i
+	SEGarrX.addEventListener('click', function (){markElemAsHidden(event)})
+
+	SEG.appendChild(SEGarrL)
+	SEG.appendChild(SEGarrX)
+	SEG.appendChild(SEGarrR)
+	STER_MENU[i].appendChild(SEG)
+}}
+
+if (actMenu==3){
+console.log("ELEMENTOW MENU: "+SETI_MENU.length)
+for (var i=0; i<SETI_MENU.length; i++)
+{
+	SETI_MENU[i].id = "MENU3_"+i
+	SETI_MENU[i].style.order = i
+
+	var SEG = document.createElement("DIV")
+	SEG.classList.add("roomSubVerticalArrow")
+
+	var SEGarrL = document.createElement("DIV")
+	var SEGarrR = document.createElement("DIV")
+	var SEGarrX = document.createElement("DIV")
+	SEGarrL.innerHTML = '<i class="fa fa-caret-left"></i>'
+	SEGarrR.innerHTML = '<i class="fa fa-caret-right"></i>'
+	SEGarrX.innerHTML = '<i class="fa fa-eye-slash"></i>'
+	SEGarrL.classList.add("arrowSegment" , "aSegL")
+	SEGarrR.classList.add("arrowSegment" , "aSegR")
+
+	SEGarrX.classList.add("arrowSegment" , "aSegX")
+
+	SEGarrL.addEventListener('click', function (){swapElems(event)})
+	SEGarrR.addEventListener('click', function (){swapElems(event)})
+
+	SEGarrX.id = "Xo_ARR"+actMenu+"_"+i
+	SEGarrX.addEventListener('click', function (){markElemAsHidden(event)})
+
+	SEG.appendChild(SEGarrL)
+	SEG.appendChild(SEGarrX)
+	SEG.appendChild(SEGarrR)
+	SETI_MENU[i].appendChild(SEG)
+}}
+}
+
+createEditables(1)
+createEditables(2)
+createEditables(3)
+
+function swapElems(event)
+{
+	var CURR_ELEM = event.currentTarget.parentElement.parentElement
+	var ELEM_ID = CURR_ELEM.id
+	var ELEM_NUM = parseInt(ELEM_ID.substring(6,ELEM_ID.length)) // nr ELEM z ID
+	var ARROW
+	if (event.currentTarget.classList.contains("aSegL")) ARROW = 'L'
+	if (event.currentTarget.classList.contains("aSegR")) ARROW = 'R'
+	
+	console.log("Elem:"+ELEM_ID+" arrow: "+ARROW+", order: "+ELEM_NUM+", site="+currSite+"::typ: "+typeof(currSite))
+
+	var LEOrd, REOrd
+	switch(ARROW)
+	{
+		case 'L':
+			{
+				if (ELEM_NUM-1 < 0) {
+					console.log('POZA ZAKRESEM Z LEWEJ')
+					CURR_ELEM.style.backgroundColor = "rgba(180,35,35,1)"
+					setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					},750)
+					break }
+				var LELEM
+				if (currSite==1 || currSite=='1') LELEM = document.getElementById("MENU1_"+(ELEM_NUM-1))
+				if (currSite==2 || currSite=='2') LELEM = document.getElementById("MENU2_"+(ELEM_NUM-1))
+				if (currSite==3 || currSite=='3') LELEM = document.getElementById("MENU3_"+(ELEM_NUM-1))
+				LEOrd = parseInt(LELEM.id.substring(6,LELEM.id.length))
+				console.log("Elem po lewej: "+LEOrd)
+				CURR_ELEM.style.order = LEOrd
+				CURR_ELEM.style.backgroundColor = "rgba(180,180,255,1)"
+				LELEM.style.order = ELEM_NUM
+				LELEM.style.backgroundColor = "rgba(255,245,245,1)"
+
+				//STER_MENU = document.getElementsByClassName("secMenu")
+				var EDITSAVED = []
+				if (currSite==1 || currSite=='1'){
+				for (var i=0; i<SENS_MENU.length; i++)
+				{
+					var ORD = parseInt(SENS_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					SENS_MENU[i].id = "MENU1_"+ORD
+				}}
+
+				if (currSite==2 || currSite=='2'){
+				for (var i=0; i<STER_MENU.length; i++)
+				{
+					var ORD = parseInt(STER_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					STER_MENU[i].id = "MENU2_"+ORD
+				}}
+
+				if (currSite==3 || currSite=='3'){
+				for (var i=0; i<SETI_MENU.length; i++)
+				{
+					var ORD = parseInt(SETI_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					SETI_MENU[i].id = "MENU3_"+ORD
+				}}
+
+				setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					LELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+				},750)
+
+				var strEdit = JSON.stringify(EDITSAVED)
+				//console.log("ZAPISANE: "+strEdit)
+				if (currSite==1 || currSite=='1') setCookie("Menu1order", 999, strEdit)
+				if (currSite==2 || currSite=='2') setCookie("Menu2order", 999, strEdit)
+				if (currSite==3 || currSite=='3') setCookie("Menu3order", 999, strEdit)
+
+				break
+			}
+		case 'R':
+			{
+				if (currSite==1 || currSite=='1') { if (ELEM_NUM+1 >= SENS_MENU.length) {
+					console.log('POZA ZAKRESEM Z PRAWEJ')
+					CURR_ELEM.style.backgroundColor = "rgba(180,35,35,1)"
+					setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					},750)
+					break }}
+
+				if (currSite==2 || currSite=='2') { if (ELEM_NUM+1 >= STER_MENU.length) {
+					console.log('POZA ZAKRESEM Z PRAWEJ')
+					CURR_ELEM.style.backgroundColor = "rgba(180,35,35,1)"
+					setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					},750)
+					break }}
+
+					if (currSite==3 || currSite=='3') { if (ELEM_NUM+1 >= SETI_MENU.length) {
+					console.log('POZA ZAKRESEM Z PRAWEJ')
+					CURR_ELEM.style.backgroundColor = "rgba(180,35,35,1)"
+					setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					},750)
+					break }}
+
+				var RELEM
+				if (currSite==1 || currSite=='1') RELEM = document.getElementById("MENU1_"+(ELEM_NUM+1))
+				if (currSite==2 || currSite=='2') RELEM = document.getElementById("MENU2_"+(ELEM_NUM+1))
+				if (currSite==3 || currSite=='3') RELEM = document.getElementById("MENU3_"+(ELEM_NUM+1))
+				
+				REOrd = parseInt(RELEM.id.substring(6,RELEM.id.length))
+				console.log("Elem po prawej: "+REOrd)
+				CURR_ELEM.style.order = REOrd
+				CURR_ELEM.style.backgroundColor = "rgba(180,180,255,1)"
+				RELEM.style.order = ELEM_NUM
+				RELEM.style.backgroundColor = "rgba(255,245,245,1)"
+
+				var EDITSAVED = []
+
+				if (currSite==1 || currSite=='1'){
+				for (var i=0; i<SENS_MENU.length; i++)
+				{
+					var ORD = parseInt(SENS_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					SENS_MENU[i].id = "MENU1_"+ORD					
+				}}
+
+				if (currSite==2 || currSite=='2'){
+				for (var i=0; i<STER_MENU.length; i++)
+				{
+					var ORD = parseInt(STER_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					STER_MENU[i].id = "MENU2_"+ORD					
+				}}
+
+				if (currSite==3 || currSite=='3'){
+				for (var i=0; i<SETI_MENU.length; i++)
+				{
+					var ORD = parseInt(SETI_MENU[i].style.order)
+					EDITSAVED[i] = ORD
+					SETI_MENU[i].id = "MENU3_"+ORD					
+				}}
+				setTimeout(function(){
+					CURR_ELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+					RELEM.style.backgroundColor = "rgba(255, 255, 255, 0.45)"
+				},750)
+
+				var strEdit = JSON.stringify(EDITSAVED)
+				//console.log("ZAPISANE: "+strEdit)
+				if (currSite==1 || currSite=='1') setCookie("Menu1order", 999, strEdit)
+				if (currSite==2 || currSite=='2') setCookie("Menu2order", 999, strEdit)
+				if (currSite==3 || currSite=='3') setCookie("Menu3order", 999, strEdit)
+
+				break
+			}
+		default: return;
+	}
+}
+
+
+function markElemAsHidden(event)
+{
+	var NUM =  parseInt(event.currentTarget.id.substring(8,event.currentTarget.id.length)) // wyciagnij nr z ID oczka 'Xo_ARR_xx'
+	
+	if (currSite==1){
+	if (SENS_MENU[NUM].classList.contains("hiddenElem"))
+	{
+		SENS_MENU[NUM].classList.toggle("hiddenElem")
+	}
+	else SENS_MENU[NUM].classList.add("hiddenElem")}
+
+	if (currSite==2){
+	if (STER_MENU[NUM].classList.contains("hiddenElem"))
+	{
+		STER_MENU[NUM].classList.toggle("hiddenElem")
+	}
+	else STER_MENU[NUM].classList.add("hiddenElem")}
+
+	if (currSite==3){
+	if (SETI_MENU[NUM].classList.contains("hiddenElem"))
+	{
+		SETI_MENU[NUM].classList.toggle("hiddenElem")
+	}
+	else SETI_MENU[NUM].classList.add("hiddenElem")}
+	console.log("Parent: "+event.currentTarget.parentElement.parentElement.classList)
+	var hiddenCookie = []
+	var bigIter = 0
+	for (var i=0; i<SENS_MENU.length; i++)
+	{
+		if (SENS_MENU[i].classList.contains("hiddenElem")) hiddenCookie[bigIter] = 1; else hiddenCookie[bigIter] = 0
+		bigIter++
+	}
+	for (var i=0; i<STER_MENU.length; i++)
+	{
+		if (STER_MENU[i].classList.contains("hiddenElem")) hiddenCookie[bigIter] = 1; else hiddenCookie[bigIter] = 0
+		bigIter++
+	}
+	for (var i=0; i<SETI_MENU.length; i++)
+	{
+		if (SETI_MENU[i].classList.contains("hiddenElem")) hiddenCookie[bigIter] = 1; else hiddenCookie[bigIter] = 0
+		bigIter++
+	}
+	console.log("BIG COKIE: "+hiddenCookie)
+	var jsnoStr = JSON.stringify(hiddenCookie)
+	setCookie("hidElemsList", 999, jsnoStr)
+}
+
+function clearLayoutCookies() // na wszelki wypadek do czyszczenia
+{
+	setCookie("hidElemsList", 999, "")
+	setCookie("Menu1order", 999, "")
+	setCookie("Menu2order", 999, "")
+	setCookie("Menu3order", 999, "")
+}
+
+function loadHiddenElemsCookie()
+{
+	var strEdit = loadCookie("hidElemsList")
+	if (strEdit == "") return
+	var jsonEdit = JSON.parse(strEdit)
+
+	var bigIter = 0
+	for (var i=0; i<SENS_MENU.length; i++) { if (jsonEdit[bigIter]==1) SENS_MENU[i].classList.add("hiddenElem"); bigIter++; }
+	for (var i=0; i<STER_MENU.length; i++) { if (jsonEdit[bigIter]==1) STER_MENU[i].classList.add("hiddenElem"); bigIter++; }
+	for (var i=0; i<SETI_MENU.length; i++) { if (jsonEdit[bigIter]==1) SETI_MENU[i].classList.add("hiddenElem"); bigIter++; }
+}
+loadHiddenElemsCookie()
+
+var EDIT_TOGGLER = 0
+function EDIT(event)
+{
+	var ALL_ELEMS = document.getElementsByClassName("roomSubVerticalArrow")
+	if (EDIT_TOGGLER==0)
+	{
+		for (var i=0; i<SENS_MENU.length; i++)
+		{
+			if (SENS_MENU[i].classList.contains("hiddenElem") && currSite==1)
+			{
+				SENS_MENU[i].style.display = "flex"
+				//console.log("POKAZUJE !")
+			}
+		}
+		for (var i=0; i<STER_MENU.length; i++)
+		{
+			if (STER_MENU[i].classList.contains("hiddenElem") && currSite==2)
+			{
+				STER_MENU[i].style.display = "flex"
+				//console.log("POKAZUJE !")
+			}
+		}
+		for (var i=0; i<SETI_MENU.length; i++)
+		{
+			if (SETI_MENU[i].classList.contains("hiddenElem") && currSite==3)
+			{
+				SETI_MENU[i].style.display = "flex"
+				//console.log("POKAZUJE !")
+			}
+		}
+		EDIT_TOGGLER = 1
+		for (var i=0; i<ALL_ELEMS.length; i++)
+		ALL_ELEMS[i].style.display = 'flex'
+		document.getElementById("MUTATE").innerHTML = "<font color='red'><i class='fa fa-close'></i>"
+		document.getElementById("MUTATEphone").innerHTML = "<font color='red'><i class='fa fa-close'></i>"
+	}
+	else 
+	{
+		for (var i=0; i<SENS_MENU.length; i++)
+		{
+			if (SENS_MENU[i].classList.contains("hiddenElem") && currSite==1)
+			{
+				SENS_MENU[i].style.display = "none"
+				//console.log("CHOWAM !")
+			}
+		}
+		for (var i=0; i<STER_MENU.length; i++)
+		{
+			if (STER_MENU[i].classList.contains("hiddenElem") && currSite==2)
+			{
+				STER_MENU[i].style.display = "none"
+				//console.log("CHOWAM !")
+			}
+		}
+		for (var i=0; i<SETI_MENU.length; i++)
+		{
+			if (SETI_MENU[i].classList.contains("hiddenElem") && currSite==3)
+			{
+				SETI_MENU[i].style.display = "none"
+				//console.log("CHOWAM !")
+			}
+		}
+		EDIT_TOGGLER = 0
+		for (var i=0; i<ALL_ELEMS.length; i++)
+		ALL_ELEMS[i].style.display = 'none'
+		document.getElementById("MUTATE").innerHTML = "<i class='fa fa-edit'></i>" 
+		document.getElementById("MUTATEphone").innerHTML = "<i class='fa fa-edit'></i>" 
+	}
+}
+
+function loadEditedLayout(actMenu)
+{
+	switch(actMenu)
+	{
+		case 1:
+			{
+				var strEdit = loadCookie("Menu1order")
+				if (strEdit == "") return
+				var jsonEdit = JSON.parse(strEdit)
+				console.log("PRZYWR. EDIT 2: "+jsonEdit+", dlg: "+jsonEdit.length)
+
+				for (var i=0; i<SENS_MENU.length; i++)
+					{
+						SENS_MENU[i].style.order = jsonEdit[i]
+						SENS_MENU[i].id = "MENU1_"+jsonEdit[i]
+					}
+				break
+			}
+		case 2:
+			{
+				var strEdit = loadCookie("Menu2order")
+				if (strEdit == "") return
+				var jsonEdit = JSON.parse(strEdit)
+				console.log("PRZYWR. EDIT 2: "+jsonEdit+", dlg: "+jsonEdit.length)
+
+				for (var i=0; i<STER_MENU.length; i++)
+					{
+						STER_MENU[i].style.order = jsonEdit[i]
+						STER_MENU[i].id = "MENU2_"+jsonEdit[i]
+					}
+				break
+			}
+		case 3:
+			{
+				var strEdit = loadCookie("Menu3order")
+				if (strEdit == "") return
+				var jsonEdit = JSON.parse(strEdit)
+				console.log("PRZYWR. EDIT 2: "+jsonEdit+", dlg: "+jsonEdit.length)
+
+				for (var i=0; i<SETI_MENU.length; i++)
+					{
+						SETI_MENU[i].style.order = jsonEdit[i]
+						SETI_MENU[i].id = "MENU3_"+jsonEdit[i]
+					}
+				break
+			}
+		default: break
+	}
+
+}
+loadEditedLayout(1)
+loadEditedLayout(2)
+loadEditedLayout(3)
+
+// ZAPISYWANIE NAZW DLA URZADZEN
+var MUTABLETXT = document.getElementsByClassName("mutableInputTxt")
+for (var i=0; i<MUTABLETXT.length; i++)
+{ MUTABLETXT[i].addEventListener("change", chngDevName) }
+function chngDevName(e)
+{
+	console.log("Odzywa sie: "+e.target.id)
+	setCookie(e.target.id, 999, e.target.value)
+}
+
+function aquireDevNames()
+{
+	for (var i=0; i<MUTABLETXT.length; i++)
+	{ 
+		var device_name = loadCookie(MUTABLETXT[i].id)
+		console.log("Device n.: "+device_name)
+		if (device_name != "")
+		{ 
+			MUTABLETXT[i].value = device_name 
+		}
+		//else { MUTABLETXT[i].value = "<device>" } // Domyslna nazwa
+			
+	}
+}
+
+// DEBUG, INFO ITP... 
+var BANNER = true
+var BAN = document.getElementById("banner")
+var DEBUG_DEL = 1800
+var form = ''
+function showReq(REQ)
+{
+	if (BANNER==true){
+	BAN.style.top = '-10px'
+
+	form += REQ
+	if (form !='') { form+='<br>' }
+	var count = (form.match(/<br>/g) || []).length;
+	BAN.innerHTML = form
+	if (count > 2) form = ''
+	setTimeout(function(){
+	BAN.style.top = '-90px'
+	form = ''
+	BAN.innerHTML = form
+	},DEBUG_DEL)}
+	
+}
+
+// MOD LIGHT - RGB FX
+function RgbFxInputs(event)
+{
+	var curr = event.currentTarget.id
+	//console.log("INP ID: "+curr)
+	var CURR_FX_SLIDER_VAL = document.getElementById(curr+"_d")
+	//CURR_FX_SLIDER_VAL.innerHTML = event.currentTarget.value;
+
+	switch (curr)
+	{
+		case "RGBFXS1" : { CURR_FX_SLIDER_VAL.innerHTML = "Faza " +Math.round(parseInt(event.currentTarget.value)*1.4117647058823529411764705882353) + "°"; break; }
+		case "RGBFXS2" : { CURR_FX_SLIDER_VAL.innerHTML = event.currentTarget.value + " mS"; break; }
+		case "RGBFXS3" : { CURR_FX_SLIDER_VAL.innerHTML = "Jasn.: " +Math.ceil(parseInt(event.currentTarget.value)*0.3921568627450980392156862745098) + "%"; break; }
+		default: break;
+	}
+
+}
+
+function RgbFxInpSet(event)
+{
+
+	document.getElementById("RGB_RainbowFxSwitch").checked = true
+	var FXV1 = document.getElementById("RGBFXS1").value
+	var FXV2 = document.getElementById("RGBFXS2").value
+	var FXV3 = document.getElementById("RGBFXS3").value
+
+	/*
+	var currElem = event.currentTarget.id
+	switch(currElem)
+	{
+		case 'RGBFXS1': document.getElementById("RGBFXS1_d").innerHTML = 'HUE Offset'; break;
+		case 'RGBFXS2': document.getElementById("RGBFXS2_d").innerHTML = 'Speed'; break;
+		case 'RGBFXS3': document.getElementById("RGBFXS3_d").innerHTML = 'Lightness'; break;
+		default: break;
+	}
+	*/
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://192.168.1.65/rainbow?onoff=1&offset="+FXV1+"&speed="+FXV2+"&light="+FXV3, true);
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	console.log(this.responseText)
+	showReq(this.responseText)
+	}}
+	xhr.send(null);
+}
+
+function RgbFxInpSetONOFF(event)
+{
+
+	var CHCK = event.currentTarget.checked
+	CHCK = (CHCK) ? 1 : 0;
+	console.log("FX STATE = "+CHCK)
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://192.168.1.65/rainbow?onoff="+CHCK, true);
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	console.log(this.responseText)
+	showReq(this.responseText)
+	}}
+	xhr.send(null);
+}
+
+// MODULAR LIGHT PRESET HANDLING CODE
+// POLA TEXTOWE I LADOWANIE ZAPISANYCH W ESP PRESETOW
+var PRESET_INPUT = document.getElementsByClassName("PRESETMODIFIER")
+var PREV_PRESET_INPUT = ["nic","nic","nic","nic","nic","nic","nic","nic"]
+
+var slotsParsed
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "http://192.168.1.65/prefs?give", true);
+xhr.onreadystatechange = function() {
+if (this.readyState == 4 && this.status == 200) {
+slotsParsed = JSON.parse(this.responseText)
+console.log(slotsParsed)
+for (var i=0; i< PRESET_INPUT.length; i++)
+{
+	//console.log(slotsParsed[i])
+	PRESET_INPUT[i].value = slotsParsed[i]
+	PREV_PRESET_INPUT[i] = PRESET_INPUT[i].value
+}
+//showReq(this.responseText)
+}}
+xhr.send(null);
+
+// PRZYPNIJ LISTENERY i FUNKCJE
+var PRESET_LOAD_BTNS = document.getElementsByClassName("BTN_MODL_PRESET_LOAD")
+var PRESET_SAVE_BTNS = document.getElementsByClassName("BTN_MODL_PRESET_SAVE")
+for (var i=0; i<PRESET_LOAD_BTNS.length; i++)
+{
+    PRESET_LOAD_BTNS[i].addEventListener("click", preset_load)
+	PRESET_SAVE_BTNS[i].addEventListener("click", preset_save)
+}
+
+
+function preset_load(e)
+{
+    console.log("Tutaj btn presetu LOAD: "+e.currentTarget.value+"  typ:"+typeof(e.currentTarget.value))
+	var that = e.currentTarget.value
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://192.168.1.65/prefs?slot="+e.currentTarget.value+"&load", true);
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	console.log(this.responseText)
+	showReq(this.responseText)
+
+	questionBarShow(presNamePrev, presName, presSlot)
+	document.getElementById("saveQ").innerHTML = "<font color='red' size=8>ZAŁADOWANO: ("+that+")<br>#   </font>"
+	document.getElementById("saveQuestion").style.display = 'none'
+	whiteFX()
+	setTimeout(function(){
+		QFX(PREV_PRESET_INPUT[parseInt(that)],'FFFEFE', 'saveQ',7)
+
+		setTimeout(() => {
+			questionBarHide()	
+			qBarForceFlag = 0
+		}, 1500);
+			}, 700)
+
+	getModularCurrStates() // zbierz wartosci wszystkiego z modular
+	}}
+	xhr.send(null);
+}
+
+// GLOBALNE dla presetu do zapisu
+var presName = "nic"
+var presNamePrev = "nic"
+var presSlot = "0"
+var questionBarState = 0
+
+function preset_save(e)
+{
+	console.log("Tutaj btn presetu SAVE: "+e.currentTarget.value+"  typ:"+typeof(e.currentTarget.value))
+	presName = PRESET_INPUT[parseInt(e.currentTarget.value)].value
+	presSlot = e.currentTarget.value
+	presNamePrev = PREV_PRESET_INPUT[parseInt(e.currentTarget.value)]
+	document.getElementById("saveQuestion").style.display = 'flex'
+
+	questionBarShow(presNamePrev, presName, presSlot)
+	/*
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://192.168.1.65/prefs?slot="+e.currentTarget.value+"&name="+PRESET_INPUT[parseInt(e.currentTarget.value)].value+"&save", true);
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+	console.log(this.responseText)
+	showReq(this.responseText)
+	}}
+	xhr.send(null);
+	*/
+}
+
+// Efekt dla textu ze stopniowym wypisywaniem
+var iter = 0
+const txtspeedconst = 110
+var txtspeed = txtspeedconst
+function QFX(napis, color, txtFieldID, txtSize)
+{
+	var LEN = napis.length
+	var TXE = document.getElementById(txtFieldID)
+	//var TCOL = Math.floor(Math.random()*16777215).toString(16)
+	if (iter >= LEN) {iter = 0; txtspeed=txtspeedconst; return;}
+	else
+	{
+		if (txtspeed - 5 < 50) txtspeed = 50; else txtspeed -= 5;
+		TXE.innerHTML +="<font color='#"+ color +"' size='"+txtSize+"'>"+ napis[iter]
+		//console.log('tu interwal!: '+napis[iter])
+		setTimeout(	function () { QFX(napis, color, txtFieldID, txtSize) } ,txtspeed)
+		iter++
+	}
+}
+
+function whiteFX()
+{
+	var WFX = document.getElementById("fxWhite")
+	WFX.style.display = 'block'
+	WFX.style.backgroundColor = 'rgba(255,255,255,1)'
+	WFX.style.pointerEvents = 'auto'
+	setTimeout(function(){
+		var WFX = document.getElementById("fxWhite")
+		WFX.style.backgroundColor = 'rgba(255,255,255,0)'
+		WFX.style.pointerEvents = 'none'
+	},1200)
+}
+// PREFS Save Question
+function presSaveQuestion(event)
+{
+	console.log(event.currentTarget.id+", val: "+event.currentTarget.value)
+	var YESNO = parseInt(event.currentTarget.value)
+	if (YESNO == 0) 
+	{
+		whiteFX()
+		document.getElementById("saveQ").innerHTML = "<font color='red' size=8> </font>"
+		document.getElementById("saveQuestion").style.display = 'none'
+		QFX('NIE NADPISUJE','FF2233', 'saveQ',7)
+		setTimeout(() => {
+			questionBarHide()	
+			qBarForceFlag = 0
+		}, 1500);
+	}
+	else
+	{
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", "http://192.168.1.65/prefs?slot="+presSlot+"&name="+presName+"&save", true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		console.log(this.responseText)
+		showReq(this.responseText)
+		}}
+		xhr.send(null);
+
+		whiteFX()
+		document.getElementById("saveQ").innerHTML = "<font color='green' size=8>"
+		QFX("Nadpisano: " +presName, '11FA22', 'saveQ',7)
+		document.getElementById("saveQuestion").style.display = 'none'
+		for (var i=0; i< PRESET_INPUT.length; i++)
+		{
+			PREV_PRESET_INPUT[i] = PRESET_INPUT[i].value
+		}
+		setTimeout(() => {
+			questionBarHide()	
+			qBarForceFlag = 0
+		}, 1700);
+	}
+}
+
+/*
+window.addEventListener('click', function(e){
+	
+	if (document.getElementById('confitmQestion').contains(e.target)){
+  } else{
+	questionBarHide()
+  }
+})
+*/
+// poczatkowy state qbara - chowaj
+if (questionBarState==0) questionBarHide()
+var qBarSidewaysFlag = 1
+var qBarForceFlag = 0
+function questionBarShow(namePrev, name, slot) 
+{ 
+	qBarForceFlag = 1
+	document.getElementById("confitmQestion").style.left = "0%"
+	document.getElementById("saveQ").innerHTML = "<i class='fa fa-exclamation-triangle' style='font-size:28px;color:red'></i>"+
+	"<br> Nadpisać: <font color='yellow'>"+
+	namePrev+"</font> <i class='fa fa-arrow-right'></i> <font color='yellow'>"+name +
+	"</font> (s: <font color='yellow'>"+slot+"</font>)"
+}
+function questionBarHide() { 
+	if (qBarSidewaysFlag==1) { document.getElementById("confitmQestion").style.left = "-110%"; qBarSidewaysFlag=0 }
+	else { document.getElementById("confitmQestion").style.left = "110%"; qBarSidewaysFlag=1 } 
+}
+
+// MODULAR LIGHT
+var MAXSPOTVAL = 4095
+var serva = document.getElementsByClassName("modularL") // multi-zbieranie po klasie
+for (var i=0; i<serva.length; i++)
+{
+    //console.log(serva[i])
+    serva[i].addEventListener("change", function(){setser(event)})
+}
+
+    var SNUM = 0
+    var SVAL = 0
+
+    function setser(event) // USTAWIENIE MODULAR 6x LED + 8x SERV
+    {
+		//audioElectr.play()
+		var SSTRING = event.currentTarget.id
+		console.log(SSTRING)
+        SNUM = parseInt(SSTRING.substr(9, 2));
+        SVAL = event.currentTarget.value
+        console.log("Wartosc serwa "+ SNUM +" na: "+SVAL)
+
+        var xhr = new XMLHttpRequest();
+	    xhr.open("GET", "http://192.168.1.65/set?n="+SNUM+"&v="+SVAL, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			showReq(this.responseText)
+			}
+		};
+		xhr.send(null);
+
+		if (SNUM>=8) // LEDy
+		{
+			var SPOT = (100/4095*SVAL).toFixed(0)
+			var TXT
+			if (SPOT > 0 && SPOT < 100) TXT = SPOT+"%"
+			else if (SPOT == 0) TXT = 'Off'
+			else TXT = 'MAX'
+			document.getElementById("LMOD_VAL_"+SNUM).innerHTML = TXT
+		}
+		if (SNUM>=2 && SNUM<8) // MALE SERVA
+		{
+			var SPOTSER = parseInt(((SVAL-160)*0.24324324324324324324324324324324)-90)*-1
+			document.getElementById("LMOD_VAL_"+SNUM).innerHTML = SPOTSER+"°"
+		}
+		if (SNUM==0 || SNUM==1) // DUZE SERVA (ramiona)
+		{
+			var SPOTSER = parseInt(((SVAL-220)*0.0952380952380952380952380952381)-30)* (SNUM==0 ? -1 : 1)
+			document.getElementById("LMOD_VAL_"+SNUM).innerHTML = SPOTSER+"°"
+		}
+    }
+	function updateModularVals(nr)
+	{
+		NR = nr
+		if (NR >= 8)
+		{
+			var VAL = document.getElementById("LMOD_LED_"+NR).value
+			var SPOT = (5/4095*VAL).toFixed(1)
+			document.getElementById("LMOD_VAL_"+NR).innerHTML = SPOT+'W'
+
+		}
+		if (NR >=2 && NR <8)
+		{
+			var VAL = document.getElementById("LMOD_SER_"+NR).value
+			var SPOTSER = parseInt(((VAL-160)*0.24324324324324324324324324324324)-90)*-1
+			document.getElementById("LMOD_VAL_"+NR).innerHTML = SPOTSER+"°"
+		}
+		if (NR == 0 || NR==1)
+		{
+			var VAL = document.getElementById("LMOD_ARM_"+NR).value
+			var SPOTSER = parseInt(((VAL-220)*0.0952380952380952380952380952381)-30)* (NR==0 ? -1 : 1)
+			document.getElementById("LMOD_VAL_"+NR).innerHTML = SPOTSER+"°"
+		}
+	}
+
+	// REGULACJA NA RAZ 6spot & 6serv
+		// przypnij listenery
+		document.getElementById("LMOD_LED_AL").addEventListener('change', setAllModularVals)
+		document.getElementById("LMOD_SER_AS").addEventListener('change', setAllModularVals) // 'mouseup' nie dziala dla dotyku
+		
+		/* inne podejscie do stestowania
+			['click','ontouchstart'].forEach( evt => 
+				element.addEventListener(evt, dosomething, false)
+			);
+		*/
+		
+		// funkcja zmieniajaca
+	function setAllModularVals(e)
+	{
+		console.log(e.target.id)
+		if (e.target.id == 'LMOD_LED_AL')
+		{
+			var req = '';
+			var curLval = e.target.value
+			for (var i=8; i<14; i++)
+			{
+				req+='n'+i+'='+curLval
+				req+= (i<13) ? '&' : '';
+			};
+				// WYSLIJ WSZYSTKIE NA RAZ
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+				xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText)
+				showReq(this.responseText)
+				getModularCurrStates()
+				}}
+				xhr.send(null);
+		}
+		if (e.target.id == 'LMOD_SER_AS')
+		{
+			var req = '';
+			var curLval = e.target.value
+			for (var i=2; i<8; i++)
+			{
+				req+='n'+i+'='+curLval
+				req+= (i<7) ? '&' : '';
+			};
+				// WYSLIJ WSZYSTKIE NA RAZ
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+				xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				console.log(this.responseText)
+				showReq(this.responseText)
+				getModularCurrStates()
+				}}
+				xhr.send(null);
+		}
+
+	}
+	// update wyswietlania wartosci dla MODL
+	function updateAllModularVals(nr)
+	{
+		if (nr=='0')
+		{
+			SALLLED = document.getElementById("LMOD_LED_AL")
+			var VAL = parseInt(SALLLED.value)
+			var CALC = (5/4095*VAL).toFixed(2)
+			document.getElementById("LMOD_VAL_AL").innerHTML = CALC+"W"
+		}
+		if (nr=='1')
+		{
+			SALLLED = document.getElementById("LMOD_SER_AS")
+			var VAL = parseInt(SALLLED.value)
+			var CALC = parseInt(((VAL-160)*0.24324324324324324324324324324324)-90)*-1
+			document.getElementById("LMOD_VAL_AS").innerHTML = CALC+"°"
+		}
+	}
+
+	// PRZYPNIJ LISTENERY DO UP/DOWN RGB LED
+	document.getElementById("MODRGB_1").addEventListener("input", function() {setled(event)})
+	document.getElementById("MODRGB_2").addEventListener("input", function() {setled(event)})
+    
+	function turnOffModRGB(ledNr)
+	{
+		if (ledNr=='up')
+		{
+			document.getElementById("MODRGB_1").value = "#000000"
+			var xhr = new XMLHttpRequest();
+			var q = "n=1&r="+0+"&g="+0+"&b="+0
+			xhr.open("GET", "http://192.168.1.65/setStrip?"+q, true);
+			xhr.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			showReq(this.responseText)
+			}
+			
+		};
+		xhr.send(null);
+		}
+		if (ledNr=='dw')
+		{
+			document.getElementById("MODRGB_2").value = "#000000"
+			var xhr = new XMLHttpRequest();
+			var q = "n=0&r="+0+"&g="+0+"&b="+0
+			xhr.open("GET", "http://192.168.1.65/setStrip?"+q, true);
+			xhr.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			showReq(this.responseText)
+			}
+			
+		};
+		xhr.send(null);
+		}
+	}
+
+	function setled(evt) // USTAWIENIA MODULAR RGB x2 LED
+    {
+        var id = evt.target.id
+        var col = evt.target.value
+        var rgb = HEXtoRGB(col)
+        
+        var q
+        if (id == 'MODRGB_1')
+        {
+             q = "n=1&r="+rgb[0]+"&g="+rgb[1]+"&b="+rgb[2]
+            console.log(q)
+        }
+        if (id == 'MODRGB_2')
+        {
+             q = "n=0&r="+rgb[0]+"&g="+rgb[1]+"&b="+rgb[2]
+            console.log(q)
+        }
+
+        var xhr = new XMLHttpRequest();
+	    xhr.open("GET", "http://192.168.1.65/setStrip?"+q, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			showReq(this.responseText)
+			}
+		};
+		xhr.send(null);
+    }
+
+	// MODULAR BUTTONS - OFF/FULL/RND etc. CODE
+	var MODULARMODBTNS = document.getElementsByClassName("BTNMODIFIER")
+	for (let i=0; i<MODULARMODBTNS.length; i++)
+	{
+		MODULARMODBTNS[i].addEventListener("click", function() {modularSetGlobal(event)})
+	}
+
+	function modularSetGlobal (event)
+	{
+		console.log(event.target.id+", val: "+event.target.value)
+		var ID = parseInt(event.target.value)
+		switch(ID)
+		{
+			case 1:
+				{
+					var req = '';
+					for (var i=8; i<14; i++)
+					{
+						req+='n'+i+'='+MAXSPOTVAL
+						req+= (i<13) ? '&' : '';
+					};
+						// WYSLIJ WSZYSTKIE NA RAZ
+						var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText)
+						showReq(this.responseText)
+						getModularCurrStates()
+						}}
+						xhr.send(null);
+					break;
+				}
+
+				case 2:
+				{
+					var req = '';
+					for (var i=2; i<8; i++)
+					{
+						req+='n'+i+'='+900+'&'
+					};
+					for (var i=8; i<14; i++)
+					{
+						req+='n'+i+'='+0
+						req+= (i<13) ? '&' : '';
+					};
+						// WYSLIJ WSZYSTKIE NA RAZ - zgas 6 LED + 6 serv ustaw na 900
+						var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText)
+						showReq(this.responseText)
+						getModularCurrStates()
+						}}
+						xhr.send(null);
+
+						// Zgas 2 x RGB LED
+						turnOffModRGB('up')
+						turnOffModRGB('dw')
+
+						// dostosuj 2 suwaki od all SPOT i all SER
+						document.getElementById("LMOD_LED_AL").value = 0
+						updateAllModularVals('0')
+						document.getElementById("LMOD_SER_AS").value = 4095
+						updateAllModularVals('1')
+					break;
+				}
+
+				case 3: // LOSOWE SWIATLA
+				{
+					var req = '';
+					for (var i=8; i<14; i++)
+					{
+						let RNDVAL = Math.floor(Math.random() * MAXSPOTVAL);
+						req+= 'n'+i+'='+RNDVAL
+						req+= (i<13) ? '&' : '';
+						console.log(RNDVAL)
+					};
+					var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText)
+						showReq(this.responseText)
+						getModularCurrStates()
+						}}
+						xhr.send(null);
+					break;
+				}
+
+				case 4: // LOSOWE SWIATLA + SERVA
+				{
+					var req = '';
+					for (var i=2; i<8; i++)
+					{
+						let RNDVAL = Math.floor(Math.random() * 740)+160;
+						req+='n'+i+'='+RNDVAL+'&'
+					};
+					for (var i=8; i<14; i++)
+					{
+						let RNDVAL = Math.floor(Math.random() * MAXSPOTVAL);
+						req+='n'+i+'='+RNDVAL
+						req+= (i<13) ? '&' : '';
+					};
+						// WYSLIJ WSZYSTKIE NA RAZ - LOSOWO 6 LED + 6 serv
+						var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setAll?"+req, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+						console.log(this.responseText)
+						showReq(this.responseText)
+						getModularCurrStates()
+						}}
+						xhr.send(null);
+					break;
+				}
+				case 5:
+					{
+						var RND = [0,0,0]
+						RND[0] = Math.round(Math.random()*255)
+						RND[1] = Math.round(Math.random()*255)
+						RND[2] = Math.round(Math.random()*255)
+						var q = "n=1&r="+RND[1]+"&g="+RND[0]+"&b="+RND[2]
+						console.log(q)
+						var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setStrip?"+q, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							console.log(this.responseText)
+							showReq(this.responseText)
+							}
+						};
+						xhr.send(null);
+
+						RND[0] = Math.round(Math.random()*255)
+						RND[1] = Math.round(Math.random()*255)
+						RND[2] = Math.round(Math.random()*255)
+						q = "n=0&r="+RND[1]+"&g="+RND[0]+"&b="+RND[2]
+						console.log(q)
+						var xhr = new XMLHttpRequest();
+						xhr.open("GET", "http://192.168.1.65/setStrip?"+q, true);
+						xhr.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							console.log(this.responseText)
+							showReq(this.responseText)
+							}
+						};
+						xhr.send(null);
+						break;
+					}
+
+				default: break;	
+		}
+	}
+
+	var PARSEDuS
+	function getSendModUs(update, dest){
+	var xhr = new XMLHttpRequest();
+	if (update==='1')
+	{
+		switch(dest)
+		{
+			case 'led':
+				{
+					var uS = $("#modUsLED").val()
+					xhr.open("GET", "http://192.168.1.65/setus?usl="+uS, true);
+					break;
+				}
+			case 'ser':
+				{
+					var uS = $("#modUsSER").val()
+					xhr.open("GET", "http://192.168.1.65/setus?us="+uS, true);
+					break;
+				}
+			default: break;
+		}
+		
+	}
+
+	else {xhr.open("GET", "http://192.168.1.65/setus", true);}
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			PARSEDuS = JSON.parse(this.responseText)
+			console.log(PARSEDuS)
+			document.getElementById("modUsLEDcurr").innerHTML = parseInt(PARSEDuS['l'])
+			document.getElementById("modUsLED").value = parseInt(PARSEDuS['l'])
+			document.getElementById("modUsSERcurr").innerHTML = parseInt(PARSEDuS['s'])
+			document.getElementById("modUsSER").value = parseInt(PARSEDuS['s'])
+			}
+		};
+		xhr.send(null);
+}
+// END MODULAR LIGHT
+function chngChartDays(e)
+{
+	//console.log(e.target.id)
+	//sprawdz ktory wykres
+	var humA = e.target.id.search("hum")
+	var presA = e.target.id.search("press")
+	var tempA = e.target.id.search("temp")
+	var type = -3
+	console.log(humA, presA, tempA)
+	if (humA==0) type = 1
+	if (presA==0) type = 2
+	if (tempA==0) type = 3
+	console.log("Typ: "+type+", wywolal: "+e.target.id)
+}
+
+function getJSdateTime(dType)
+{
+var date = new Date();
+var day = date.getDate(),
+	month = date.getMonth() + 1,
+	year = date.getFullYear(),
+	hour = date.getHours(),
+	min  = date.getMinutes(),
+	sec = date.getSeconds();
+
+	month = (month < 10 ? "0" : "") + month;
+	day = (day < 10 ? "0" : "") + day;
+	hour = (hour < 10 ? "0" : "") + hour;
+	min = (min < 10 ? "0" : "") + min;
+	sec = (sec < 10 ? "0" : "") + sec;
+
+var currDate = year + "-" + month + "-" + day,
+	currTime = hour + ":" + min + ":" + sec; 
+	switch (dType)
+	{
+		case 'd': return currDate;
+		case 't': return currTime;
+		case 'a': return currDate+'-'+currTime;
+		default: return;
+	}
+}
+
+// Funkcje konwersji HEX-HSV-RGB
+function HEXtoRGB(hex){
+	var vRGB = hex.replace('#','');
+	var RGBVAL = parseInt(vRGB,16);
+	var RGBArr = [];
+	RGBArr[0] = RGBVAL >> 16; RGBArr[1] = RGBVAL >> 8 & 255; RGBArr[2] = RGBVAL & 255;
+	return RGBArr;
+}
+
+function hslToHex(h, s, l) { // 0-360, 0-100, 0-100
+	l /= 100;
+	const a = s * Math.min(l, 1 - l) / 100;
+	const f = n => {
+		const k = (n + h / 30) % 12;
+		const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+		return Math.round(255 * color).toString(16).padStart(2, '0');
+	};
+	return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function rgbToHex(r,g,b)
+{
+	var R = (r <= 15) ? '0'+r.toString(16) : r.toString(16)
+	var G = (g <= 15) ? '0'+g.toString(16) : g.toString(16)
+	var B = (b <= 15) ? '0'+b.toString(16) : b.toString(16)
+	return '#'+R+G+B
+}
+
+// Zapytaj ESP o aktualne dane co 10 sekund
+function httpGetData(){		
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var mJson = JSON.parse(this.responseText);
+		var space = (mJson.D).indexOf(" ")
+		var YDM = (mJson.D).substring(0,space)
+		var HMS = (mJson.D).substring(space,(mJson.D).lenth)
+		$("#updTime").html(HMS+"<br> <font size='4'>"+YDM+"</font>")
+		$("#tempholder").html(mJson.T +" &#176;C");
+		$("#humholder").html(mJson.H+" %");
+		$("#pressholder").html(mJson.C+"<br> hPa");
+		}
+	};
+	xhr.open("GET", "http://"+ESP_IP+"/getCurrData", true);
+	xhr.send();		
+}
+
+// Zapytaj ESP o dane T/GAS
+function httpGetCOData(){
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		//console.log("RES:"+this.responseText)
+		var mJson = JSON.parse(this.responseText);
+		var space = (mJson.D).indexOf(" ")
+		var YDM = (mJson.D).substring(0,space)
+		var HMS = (mJson.D).substring(space,(mJson.D).length)
+		$("#COTempHolder").html(mJson.TCO +" &#176;C<br><p style='font-size:14px; margin: 0 0 0 0;'>("+HMS+" )</p>"); 
+		var GASPCTG = mJson.GAS
+		if (GASPCTG > 200 && GASPCTG <= 250) $("#styled_icon").css("color","yellow")
+		else if (GASPCTG > 250) $("#styled_icon").css("color","red")
+		else $("#styled_icon").css("color","green")
+		$("#BRGasHolder").html(GASPCTG+"/1024<br><p style='font-size:14px; margin: 0 0 0 0;'>("+HMS+" )</p>");
+		console.log("ESP podalo CO")
+		}
+	}; 
+	xhr.open("GET", "http://"+ESP_IP+"/getCOData", true);
+	xhr.send();		
+}
+
+/* KONWERSJA STRINGU NA FORMAT DATETIME JS
+const getDateFromString = str => {
+  const [date,time] = str.split(" ");
+  // reformat string into YYYY-MM-DDTHH:mm:ss.sssZ
+  str = `${date}T${time}.000Z`
+  return new Date(str);
+};
+let date = getDateFromString('2011-07-14 11:23:00');
+console.log(date)
+
+///////////////////// ODEJMOWANIE DAT
+var DateDiff = {
+ 
+    inDays: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return Math.floor((t2-t1)/(24*3600*1000));
+    },
+ 
+    inWeeks: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return parseInt((t2-t1)/(24*3600*1000*7));
+    },
+ 
+    inMonths: function(d1, d2) {
+        var d1Y = d1.getFullYear();
+        var d2Y = d2.getFullYear();
+        var d1M = d1.getMonth();
+        var d2M = d2.getMonth();
+ 
+        return (d2M+12*d2Y)-(d1M+12*d1Y);
+    },
+ 
+    inYears: function(d1, d2) {
+        return d2.getFullYear()-d1.getFullYear();
+    }
+}
+ 
+var dString = "May, 20, 1984";
+ 
+var d1 = new Date(dString);
+var d2 = new Date();
+ 
+document.write("<br />Number of <b>days</b> since "+dString+": "+DateDiff.inDays(d1, d2));
+document.write("<br />Number of <b>weeks</b> since "+dString+": "+DateDiff.inWeeks(d1, d2));
+document.write("<br />Number of <b>months</b> since "+dString+": "+DateDiff.inMonths(d1, d2));
+document.write("<br />Number of <b>years</b> since "+dString+": "+DateDiff.inYears(d1, d2));
+*/
+//ZMIANA TLA --- Przypnij listenery
+var VISUALS = document.getElementsByClassName("visuals")
+var CSS_ROOT = document.querySelector(':root')
+const BG_LINKS_IMG = {
+	'IMGBG1':'url("https://lh3.googleusercontent.com/Iou0fC_WGpDQK4-TaVx7BwLuqpFITEL3dRuioJRFc3jpphOopL_RwYdqt3rh5P7_c_i6GTtJ6LKnHpPURsdZVJwQLIZ95ZI2D_1laCFsuJZzEkE04Y6wMsH7C_uTVC1UWw7KqOV9KBkUis8HR5XJPUNV94Vu0j3Kyc98JwhWUdFPn4EVcnZxQvCgbw8hl6OIP0_yxitkq2hnlOyOMWY9s2o-ShOzJbZTqsDs3a1nTUWK2xGqtA2CgBFWkniseOaM8mA3C2uNo17sARpyy3uDpjz2uWs346YiDko2U8EXV31FOQDqhPf6wI1SKls2eWgDbhRRSLLvfotN3gNG6JIg2_B_wlBPpT30_iRMbr3lzePSdOpEM7T1NiomYyHhkMITXsNYgBpdvM3AUrBuKuTR5iZaRhW-HqBj1xxhyGXrIB2EppDijwXocu26Ka40b5O0U3tN7GakFM1JoaLCIA8L_Vgg01rs5bk_ZPCSX6SisM7XMPLd99VOcwbjIEebg3RoQfcKZ1geCQX8WvreZLjZ0aGE-950SK8aVJ2iP6XIP09sXsmWfdKfvGcRQCNSHnN4EAI6BMCTq6Q3EQr-U1rDUhLNbWtwReLFk6AAJL2jyySfWMkrBrVtnawkbFAl3xtQrTGk98QHWFy7NFG4qreo3tiqBp4vYMp_GsQebVDeulONejMvCJhN8x9Cy-sG1n3vpahCrzE3k9ofWa7d7jlXlegHzKRZTeNIAP9_deWmfO3QyzcV2LijJT7Su4WUVnVY4bL5Vrfb2lVLyEvj33HI8BU8KKbpm-Ak_Wig1fqmiB-EpQqoQM6-e-cwqUYvmQSyvqLGeZnlNuX1ujV_lGp6nuCy20YqzEoeWrYVhjiujawDQ5WJWJyD8sA4hl5RX1spzTImIeDcNv25npB8Zr7PgWBZXQiHkvy7grQ_KP2_gJ5-Y6gq004QOT0kbnWncnUxP0YjcQmt9cU2W8fdboukrtnGWDoZNiMcM4cxyWRO6hpM9nyU5B2L=w1421-h947-s-no?authuser=0")',
+	'IMGBG2':'url("https://lh3.googleusercontent.com/pw/AIL4fc89TBRW97NAJ6IVAuww608gLMw8hxqKuUI4djAdwiouVUmtH3iEnRl39ZTx5S-RwEI1wXXzlbqNjV7ARvdhF7HLjLOLhVHTUt8_CVnLUoYuIysfo4pevBv-eKNyr8_xr98h3Ofwx0p15lfiV-SQp8frPsIbNXnDMfZMEtWusOLWCkuygfuWVrzOpmHDbAmfz9hCihBNa10mTWCETZgwBBb40dW3J1f0Ot_1-CeuT2v0n8y17mWBzSgc_w1Z5ooX3bCAOBBMHGGpz1OKThmetrajXEuw7ehubWrGshinA_Rr8c4ZZ4it_3pJOAf2AKmt_vzadB-pfVP-7lBcfW4TWGvm7gMq773uLXpiUJYGLB-nsudcOYktnjYqZRuGB6wvoOMIJLv01-6S3yqcS1iHxrGwBXSP04Zwo26DL4Hse7VBTChral33KmfOUdP-kha-vb_h_SqzCxhqlnZBQlCBEUdy_9oaJL46-F3-WtQhpOCE1x2hteM4Fttm9tSZrqpL3nn5D3OflkqFcFAqT7KSm_b_ejTUUkmTb-6hD_x0Q7wUpSRdqkqB01KwVEucveCCtXor3HS2_AIhgrqf4Z_D5H-G6x_H9d7v1DvNF_qZETB5TjFC7cZQ7pOb5JIA4FEuFJRma1BNNnBMOVpGiUfuh688mWBkDhGguVy2naxhS7rFbw3jnr7BNnKEK7Cgqx7emnjTgVC04L2fL-ZAAZNKwXPs29eeZXLHmx8Q9JnnPv4gOdk3Q_WBBoL2iIQNVhLA6HH3cEDirqZndU55C36p5QP33Y5A1M_eFPAFezY3Y2F8xwwB3j3J1sLHDpaucuOur2umhyI4_ZmzpL59oH1UO9jtMrxEo-MO2o3fTmp9I5c7Czwdpc7Jmvlb92z8Rg_Bq1kbT8iHBq4Os8omQBSHa4tQpV6w73t6gsWIDv_qGYlJMtvWqnPtO7Tgm1IPJOlQd6pd-cPhEfyKpluQFevYA5Tqnh9NFA=w446-h941-s-no?authuser=0")',
+	'IMGBG3':'url("https://lh3.googleusercontent.com/iOu3GAwnHabwrkeZE0ZO9dMVZ8idgnTyIXr68aZ-A4EJ0fdnde82kikMiHNHTWTIesgrTagZO-iSXdAedSMnLR4aIip7LTrBs_WxUVowl1uCUGnuax3r5DI2a4SW2nt-t1ben9Tp7OlqJgeODz2FJz6xdGxB7EeXT3TntepLwb6znT3mCmT7CB2miNlDfh3y7WGCI_JwE-1Tz4zg3q_kYyoPAvGnVhvoCE2B1Y-17yanIzI8YwFnr_LKlzRph92-iIgcZwb81rP_n6RP1-N3ZrfEhbcN3wQxGo5e0pnih54fzrNfduw6eZf2PrSSYKiNZ4-iy9TiMt4FQVJDR7hfDnOtR_NsTNdUv31vpbal-8jPqrnFSAv6BCGrZc4f2pn8y8jt3Vx_IpvOuvm0zmUoFx1K1V0sbi2MNFqH0aIW0Ijt1p1kcAYUepdbTRXKcMFF-be3LXNkZ4OrLCuDjK-b7KfOu3fwvin9JiKLM4KYkfF1f31_JmA4fUUXADjZUd3LC7TF1Lv7oojGvGuV7j_MStr10Mb277Zh2VWW8noU62nz6sqkPjOcpaKUN7WYsUcgEokcndc0Nz3wgqv9V_J-LOKH-hjdl7XBPcymCy3Nozf5wGyTqAbl9S1GI1yQbVPTmoC6LngZc0aG0LAHnF_dsrx5ZsWQBeRcqwErKC69eoMGe_Tl6z-lmUXI07guE09_Ul5n1P8nLHwRzz1blPsRXOaXtWFuPYKF-5x-4sClIeWmZ4G1J-Jx6vNBJ0K6IO318QB5pZdSBJt4h-H64gNsUE4Cc_rJHJmFIrAmNQ5WsdhXPH0GHO-einKxunziOzIC_7k2VuK3Jonw8iHW-gnEvXa4-i4I8gtltWNsbhld4gd47lFjhWjizRhiAvhLwO2pvCasuLht69_KXZe6rGmQn1E2JuKdgrXyd3H2VLfW-XRc1c7XFD1awnCfQaXscDzFPV_34BLU8nUsVgm5Zt7lEyUObZQid87G64GkmkOL9_Cs-IP1T8cY=w494-h282-no?authuser=0")',
+	'IMGBG4':'url("https://lh3.googleusercontent.com/gh7ccp9u7TqaCewnXbwa82hf3eODWjRmgGUBtxOQ8NFKRo6mu3r6PjgESPhhFw2FdRAwLsfHESnj1cb1APHOCpdkhVEh9iwdcG2fPe22opdNAk7H5el3QE1qMK83SAwAeagDL-4l5l-Mw_mOnFfVQugn8_0kg4K8ERM6mNCBacc9a_HpnrHIljqCoi9cLWKcPujiY5kiBtrbLjsGBoiQagD7GSCV3fpBg24P6JhHNLUzPtlYpRyShADKmXnG-EX4mV7nOb5MgimWC7oTHHRuL51zGNW0R5FSZHXULUFf79t2XKmpBtVO0jj8dEpq6UU5xi3hXbMYq4VQS--cON0YLUQ_43eB9px5qIQuz-0exK2AlxZRcZq9aNCCOEkxsVLfW37bZsA14BBthu5jPWDq_Jh-2efOpllF7XrEYkCT48tRUY2UncT3LUAFfcugH30XNJGMcvWKysCrCHFW-q9TBdy4ET_gitVCrVxdGAIXr3gEpbdKXs1o_YxJzLb9gAr8-fQPvmWps3NwFTlpWNamZtooSbKHZ3aDsG9r6QTQqNFifISWohyRvs7XLzQtNH1cyPEQZQaLbwW-lsSjfAaPfhcskXyOcNPtFpaKU2hY268QKUap7sfHjgDZ_OJi-RTdDBHQHPfKnSZz0bb0xO3ZmekaDOdGTrWQlE-UpeDk3rlcU68u71cmquoETzcPmf7lNan7WUljI4hk1_2uK2e50rK-TrPnGRvmybIQAHGlSawsmFmuMF5by933KUIUn84W_OSe6MnVSDKcq_FJIRVAx3RUPR_CToj-EHsiTv3_vsiDsGkc-zZQyrim8pmFWs6o5YwW54nb55V57QYoPad62gEhlD-QnIZkH3Jxgjbi1Ex-pBCZiRg4-BrDnbm9cCwP-7skSXob2dlK-_rR72IjC3sHmL4LGzSytH-_QlyzX68xMt-vfHRIRAegMS1t8PJvCB243SW86oaGmdm8SRMYBZsCCiAjOQck1_IkcEQqIyRbcfwAslmY=w1796-h947-s-no?authuser=0")',
+}
+for (let i=0; i<VISUALS.length; i++) { VISUALS[i].addEventListener("click", v_changeBG)}
+
+// Glowna f. listenera zmiany visuals
+function v_changeBG(e)
+{
+	var PARAMS = {'name':e.target.name,
+				  'id':e.target.id,
+				  'value':e.target.value,
+				  'state':e.target.checked,
+				  'type':e.target.type
+				}
+	console.log(PARAMS)
+	setCookie('bg_img', 240, PARAMS.value)
+	if (PARAMS.value == 1) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG1']); // light
+	if (PARAMS.value == 2) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG2']); // spark
+	if (PARAMS.value == 3) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG3']); // digital
+	if (PARAMS.value == 4) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG4']); // space
+}
+
+//ZMIANA STRONY STARTOWEJ --- Przypnij listenery
+var STARTSITE = document.getElementsByClassName("startSite")
+for (let i=0; i<STARTSITE.length; i++) { STARTSITE[i].addEventListener("click", v_changeSS)}
+
+// Glowna f. listenera zmiany strony
+function v_changeSS(e)
+{
+	var PARAMS = {'name':e.target.name,
+				  'id':e.target.id,
+				  'value':e.target.value,
+				  'state':e.target.checked,
+				  'type':e.target.type
+				}
+	console.log(PARAMS)
+	setCookie('v_chng_ss', 240, PARAMS.value)
+	if (PARAMS.value == 1) currSite=1
+	if (PARAMS.value == 2) currSite=2
+	if (PARAMS.value == 3) currSite=4
+
+}
+var GLOBSET = document.getElementsByClassName("globSettings")
+for (let i=0; i<GLOBSET.length; i++) { GLOBSET[i].addEventListener("click", v_changeGlobSet)}
+function v_changeGlobSet(e)
+{
+	console.log(e.targetid+" / "+e.target.value+" / "+e.target.checked)
+	setCookie('v_globSet_'+e.target.value, 240, e.target.checked)
+
+	if (e.target.value==1)
+	{
+		BANNER = (e.target.checked==true) ? true : false;
+	} 
+}
+
+//ZMIANA MAX JASNOSCI SPOT LED --- Przypnij listenery
+var SPOTRES = document.getElementsByClassName("spotRes")
+for (let i=0; i<SPOTRES.length; i++) { SPOTRES[i].addEventListener("click", v_changeMaxSpot)}
+function v_changeMaxSpot(e)
+{
+	var MAXS = e.target.value
+	console.log("Max SPOT: "+MAXS)
+	setCookie('v_chng_maxspot', 240, MAXS)
+	MAXSPOTVAL = parseInt(MAXS)
+}
+
+function getModularCurrStates()
+{
+				// POBIERZ WARTOSCI SERV I LED Z MODULAR LIGHT
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "http://192.168.1.65/givesers", true);
+				xhr.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				parsedSers = JSON.parse(this.responseText)
+				//showReq(this.responseText)
+				console.log(parsedSers)
+
+				// PRZYPISZ OSTATNIE USTAWIENIA DO INPUTOW
+				for (let i=8; i<14; i++) // LEDy
+				{
+					var SPOT = parseInt(100/4095*parsedSers[i])
+					document.getElementById("LMOD_VAL_"+i).innerHTML = SPOT+'%'
+					document.getElementById("LMOD_LED_"+i).value = parseInt(parsedSers[i])
+				}
+
+				for (let i=2; i<8; i++) // MALE SERVA
+				{
+					var SPOTSER = parseInt(((parsedSers[i]-160)*0.24324324324324324324324324324324)-90)*-1
+					document.getElementById("LMOD_VAL_"+i).innerHTML = SPOTSER+"°"
+					console.log(parsedSers[i])
+					document.getElementById("LMOD_SER_"+i).value = parseInt(parsedSers[i])
+				}
+
+				for (let i=0; i<2; i++) // DUZE SERVA (ramiona)
+				{
+					var SPOTSER = parseInt(((parsedSers[i]-220)*0.0952380952380952380952380952381)-30)* (i==0 ? -1 : 1)
+					document.getElementById("LMOD_VAL_"+i).innerHTML = SPOTSER+"°"
+					document.getElementById("LMOD_ARM_"+i).value = parsedSers[i]
+				}
+				
+				// RGB 2x tasmy
+				document.getElementById("MODRGB_2").value = rgbToHex(parsedSers[14],parsedSers[15],parsedSers[16])
+				document.getElementById("MODRGB_1").value = rgbToHex(parsedSers[17],parsedSers[18],parsedSers[19])
+
+				}
+				};
+				xhr.send(null);
+}
+var ENEMedians = [
+	['P',0,0],
+	['E',0,0],
+	['$',0,0],
+	['PF',0,0],
+	['C',0,0],
+	['V',0,0]
+]
+
+function calcMedians ()
+{
+	var Pm = (ENEMedians[0][1] + ENEMedians[0][2])
+	var Em = (ENEMedians[1][1] + ENEMedians[1][2])
+	var Cm = (parseFloat(ENEMedians[2][1]) + parseFloat(ENEMedians[2][2]))
+	var PFm = ((parseFloat(ENEMedians[3][1]) + parseFloat(ENEMedians[3][2]))/2)
+	var Am = (parseFloat(ENEMedians[4][1]) + parseFloat(ENEMedians[4][2]))
+	var Vm = (ENEMedians[5][1] + ENEMedians[5][2])/2
+	Pm = Pm.toFixed(2)
+	Em = Em.toFixed(2)
+	Cm = Cm.toFixed(2)
+	PFm = PFm.toFixed(2)
+	Am = Am.toFixed(2)
+	Vm = Vm.toFixed(2)
+
+	$("#E1_PCtMed").html(Pm +" W")
+	$("#E1_EtMed").html(Em +" kWh")
+	$("#E1_COSTtMed").html(Cm +" zł")
+	$("#E1_PFtMed").html(PFm +" %")
+	$("#E1_CtMed").html(Am +" A")
+	$("#E1_VtMed").html(Vm +" V")
+
+}
+// Zapytaj ESP-Energia o aktualne dane PRAD
+function httpGetPower(nr){
+	var NR = nr
+	console.log("Wywoluje nr: "+NR)
+	var xhr = new XMLHttpRequest();
+	const subTXT = '#aac921'
+	const subTXT2 = '#f0c97a'
+	//const subTXT2 = '#f0c97a'
+	const subTXTFntS = '3px'
+	xhr.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var mJson = JSON.parse(this.responseText)
+		console.log(mJson)
+		var space = (mJson.D).indexOf(" ")
+		var YDM = (mJson.D).substring(0,space)
+		var HMS = (mJson.D).substring(space,(mJson.D).length)
+		var ENE = parseFloat(mJson.E)
+		var UNIT
+		if (ENE < 10000) UNIT = ' kWh'
+		else UNIT = ' kWh'
+		var COST = (ENE*ENERGY_COST).toFixed(2)
+		//$("#E1_E").html(mJson.E + UNIT+"<br> ~ "+MED+" kWh/dzień")
+		//var pow = this.responseText
+		$("#E1_PC"+NR).html(mJson.P +" W")
+		$("#E1_PF"+NR).html((mJson.X*100).toFixed(1)+"%")
+		$("#E1_V"+NR).html(mJson.V +" V")
+		$("#E1_C"+NR).html(mJson.C +" A")
+		var MOC2 = (1000/parseFloat(mJson.P)).toFixed(1)
+		$("#ene"+NR+"_head").html("Energia: "+NR+" ,"+HMS+" "+YDM+", 1 kWh za ~ "+MOC2+" godzin")
+		$("#E1_E"+NR).html(mJson.E + UNIT)
+		$("#E1_F"+NR).html(mJson.F +" Hz")
+		
+
+		var INT_EPOCH = (parseInt(mJson.O))*1000
+		var NOW = new Date()
+		var LAST_ENE = new Date(INT_EPOCH)
+		var DDIF = NOW-LAST_ENE;
+		
+		var LE_HRS = (DDIF/1000/60/60).toFixed(1)
+		var LE_DAYS = Math.floor(LE_HRS/24)
+		LE_HRS = (LE_HRS-24*LE_DAYS).toFixed(1)
+		var MED = (parseFloat(mJson.E)/(LE_DAYS+LE_HRS/24)).toFixed(3)
+
+
+		var SPIFFS = ""
+		if (mJson.S == 1) SPIFFS = "<font size='2' color='green'>(SPIFFS OK)</font>"
+		else SPIFFS = "<font size="+subTXTFntS+" color='red'>(SPIFFS ERR!)</font>"
+
+		$("#E1_LE"+NR).html(LE_DAYS+" d, "+LE_HRS+" g.<br>"+SPIFFS)
+		$("#E1_COST"+NR).html(COST +" zł.<br><font size='2'>"+LE_DAYS+" d, "+LE_HRS+" g.<br>")
+
+		var PPPB = calckPower(mJson.P, mJson.X)
+		$("#E1_PB"+NR).html((PPPB.PB).toFixed(2) +" VAR")
+		$("#E1_PP"+NR).html((PPPB.PP).toFixed(2) +" VA")
+
+		// TABELE
+		$("#E1_PCt"+NR).html(mJson.P +" W")
+		$("#E1_PFt"+NR).html((mJson.X*100).toFixed(0)+"%")
+		$("#E1_Vt"+NR).html(mJson.V +" V")
+		$("#E1_Ct"+NR).html(mJson.C +" A")
+		$("#E1_Et"+NR).html(mJson.E + UNIT)
+		$("#E1_Ettxt"+NR).html("1 kWh za &#x224B; "+MOC2+" g."+"<br> &Delta; "+MED+" kWh/d.")
+		$("#E1_Ft"+NR).html(mJson.F +" Hz")
+		$("#E1_COSTt"+NR).html(COST +" zł.<br><font size="+subTXTFntS+" color="+subTXT+">"+LE_DAYS+" d, "+LE_HRS+" g.<br>")
+		$("#E1_PBt"+NR).html("<font size="+subTXTFntS+" color="+subTXT2+">"+(PPPB.PB).toFixed(2) +" VAR</font>")
+		$("#E1_PPt"+NR).html("<font size="+subTXTFntS+" color="+subTXT2+">"+(PPPB.PP).toFixed(2) +" VA</font>")
+
+		// MEDIANY
+		ENEMedians[0][NR] = mJson.P
+		ENEMedians[1][NR] = mJson.E
+		ENEMedians[2][NR] = COST
+		ENEMedians[3][NR] = (mJson.X*100).toFixed(0)
+		ENEMedians[4][NR] = mJson.C
+		ENEMedians[5][NR] = mJson.V
+		}
+	};
+	var EIP = ''
+	switch (NR)
+	{
+		case '1': EIP = ESP_ENERGY_IP1; break;
+		case '2': EIP = ESP_ENERGY_IP2; break;
+		default: return; 
+	}
+
+	xhr.open("GET", "http://"+EIP+"/getCurrData", true);
+	xhr.send();		
+}
+
+function calckPower(ap, pf)
+{
+	var PC = parseFloat(ap)
+	var PF = parseFloat(pf)
+	var PP = PC/PF
+	var degPF = Math.acos(PF)
+	var sinPB = Math.sin(degPF)
+	var PB = sinPB*PP
+	var data = {"PP":PP, "PB":PB}
+	return data
+}
+// Zaagregowanych danych w pamieci FLASH ESP32
+function updDataNum(){
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://"+ESP_IP+"/getDataNums", true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			$("#dNumHolder").html(this.responseText);
+			}
+		};
+		xhr.send(null);
+}
+
+// zarzadzanie elementami menu
+var currSite = 2 // POCZATKOWA STRONA
+const items = document.getElementsByClassName("items")			// ELEMENTY MENU
+
+const frstM = document.getElementsByClassName("firstMenu")		// 1 - CZUJNIKI
+const secM = document.getElementsByClassName("secMenu")			// 2 - STEROWANIE
+const thirdM = document.getElementsByClassName("thirdMenu") 	// 3 - USTAWIENIA
+const fourM = document.getElementsByClassName("fourMenu") 		// 4 - ENERGIA
+const ENETABLE = document.getElementsByClassName("enePHONE")	// 4 ENERGIA TABELA
+
+function hideMenuAtStart(){ // pok. i ukr. elementow przy ladowaniu
+
+	for(var i = 0; i < frstM.length; i++)
+		{frstM[i].style.display = "none"}
+	for(var i = 0; i < secM.length; i++)
+		{secM[i].style.display = "none"}
+	for(var i = 0; i < thirdM.length; i++)
+		{thirdM[i].style.display = "none"}
+	for(var i = 0; i < fourM.length; i++)
+		{fourM[i].style.display = "none"}
+	for(var i = 0; i < ENETABLE.length; i++)
+		{ENETABLE[i].style.display = "none"}
+
+	//CURR_MODULAR_VALS[14] = {}
+	switch(currSite)
+	{
+		case 1: { 
+			for(var i = 0; i < frstM.length; i++)
+			{if (frstM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) frstM[i].style.display = "none"; else frstM[i].style.display = "flex"}
+			break; }
+		case 2: { 
+			for(var i = 0; i < secM.length; i++)
+			{if (secM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) secM[i].style.display = "none"; else secM[i].style.display = "flex"}
+			break; }
+		case 3: { 
+			for(var i = 0; i < thirdM.length; i++)
+			{if (thirdM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) thirdM[i].style.display = "none"; else thirdM[i].style.display = "flex"}
+			break; }
+		case 4: { 
+			for(var i = 0; i < fourM.length; i++)
+			{fourM[i].style.display = "flex"} 
+			for(var i = 0; i < ENETABLE.length; i++)
+			{ENETABLE[i].style.display = "table"}	
+			break; }
+	}
+}
+
+function navClick(e){
+	if (qBarForceFlag==1) {questionBarHide(); qBarForceFlag=0} // zawsze chowaj question jezeli wyskoczylo
+	console.log(e.target)
+	//e.target.classList.add("active")
+		if (e.target.id=="it1" || e.target.id=="p_left") // CZUJNIKI
+		{
+			currSite = 1
+			for(var i = 0; i < frstM.length; i++)
+			{if (frstM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) frstM[i].style.display = "none"; else frstM[i].style.display = "flex"}
+			for(var i = 0; i < secM.length; i++)
+			{secM[i].style.display = "none"}
+			for(var i = 0; i < thirdM.length; i++)
+			{thirdM[i].style.display = "none"}
+			for(var i = 0; i < fourM.length; i++)
+			{fourM[i].style.display = "none"}
+			for(var i = 0; i < ENETABLE.length; i++)
+			{ENETABLE[i].style.display = "none"}
+			$("#it2").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#it0").removeClass("active")
+			$("#p_mid").removeClass("active")
+			$("#p_right").removeClass("active")
+			$("#p_ene").removeClass("active")
+
+			$("#it1").addClass("active")
+			$("#p_left").addClass("active")
+
+			$("#HEADER").html("CZUJNIKI")
+			//QFX("CZUJNIKI (1/4)", "FFFFFF", "HEADER", 5)
+
+		}
+		if (e.target.id=="it2" || e.target.id=="p_mid") // STEROWANIE
+		{
+			currSite = 2
+			for(var i = 0; i < frstM.length; i++)
+			{frstM[i].style.display = "none"}
+			for(var i = 0; i < secM.length; i++)
+			{if (secM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) secM[i].style.display = "none"; else secM[i].style.display = "flex"}
+			for(var i = 0; i < thirdM.length; i++)
+			{thirdM[i].style.display = "none"}
+			for(var i = 0; i < fourM.length; i++)
+			{fourM[i].style.display = "none"}
+			for(var i = 0; i < ENETABLE.length; i++)
+			{ENETABLE[i].style.display = "none"}
+			$("#it1").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#it0").removeClass("active")
+			$("#p_left").removeClass("active")
+			$("#p_right").removeClass("active")
+			$("#p_ene").removeClass("active")
+
+			$("#it2").addClass("active")
+			$("#p_mid").addClass("active")
+
+			$("#HEADER").html("STEROWANIE")
+			//QFX("STEROWANIE (2/4)", "FFFFFF", "HEADER", 5)
+
+		}
+		if (e.target.id=="it3" || e.target.id=="p_right") // USTAWIENIA
+		{
+			currSite = 3
+			for(var i = 0; i < frstM.length; i++)
+			{frstM[i].style.display = "none"}
+			for(var i = 0; i < secM.length; i++)
+			{secM[i].style.display = "none"}
+			for(var i = 0; i < thirdM.length; i++)
+			{if (thirdM[i].classList.contains("hiddenElem") && EDIT_TOGGLER==0) thirdM[i].style.display = "none"; else thirdM[i].style.display = "flex"}
+			for(var i = 0; i < fourM.length; i++)
+			{fourM[i].style.display = "none"}
+			for(var i = 0; i < ENETABLE.length; i++)
+			{ENETABLE[i].style.display = "none"}
+			$("#it1").removeClass("active")
+			$("#it2").removeClass("active")
+			$("#it0").removeClass("active")
+			$("#p_left").removeClass("active")
+			$("#p_mid").removeClass("active")
+			$("#p_ene").removeClass("active")
+
+			$("#it3").addClass("active")
+			$("#p_right").addClass("active")
+
+			$("#HEADER").html("USTAWIENIA")
+			//QFX("USTAWIENIA  (4/4)", "FFFFFF", "HEADER", 5)
+
+		}
+		if (e.target.id=="it0" || e.target.id=="p_ene") // ENERGIA
+		{
+			currSite = 4
+			for(var i = 0; i < frstM.length; i++)
+			{frstM[i].style.display = "none"}
+			for(var i = 0; i < secM.length; i++)
+			{secM[i].style.display = "none"}
+			for(var i = 0; i < thirdM.length; i++)
+			{thirdM[i].style.display = "none"}
+			for(var i = 0; i < fourM.length; i++)
+			{fourM[i].style.display = "flex"}
+			for(var i = 0; i < ENETABLE.length; i++)
+			{ENETABLE[i].style.display = "table"}
+			$("#it1").removeClass("active")
+			$("#it2").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#p_left").removeClass("active")
+			$("#p_mid").removeClass("active")
+			$("#p_right").removeClass("active")
+	
+			$("#it0").addClass("active")
+			$("#p_ene").addClass("active")
+
+			$("#HEADER").html("ENERGIA")
+			//QFX("ENERGIA (3/4)", "FFFFFF", "HEADER", 5)
+
+		}
+}
+
+function updLED(LEDnum){
+	var rgbCOL,RGBArr,LEDAddr
+		rgbCOL = document.getElementById("inpLED1").value;
+		RGBArr = HEXtoRGB(rgbCOL);
+		document.getElementById(LEDnum+'_BG').style.backgroundColor = rgbCOL;
+		document.getElementById("LEDval1").innerHTML = rgbCOL;
+	var mesage = "Red="+RGBArr[0]+"&Green="+RGBArr[1]+"&Blue="+RGBArr[2];
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://"+ESP_IP+"/get"+LEDnum+"?"+mesage, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			showReq(this.responseText)}};
+		xhr.send(null);
+}	
+
+// 3x LED 2022
+function updateLED(LEDnum)
+{
+	if(LEDnum == 'LEDs11') LEDid = 'LEDs1'
+	if(LEDnum == 'LEDs12') LEDid = 'LEDs2'
+	if(LEDnum == 'LEDs13') LEDid = 'LEDs3'
+	var rgbCOL = document.getElementById(LEDnum+"_inp").value
+	document.getElementById(LEDnum+"_bg").style.backgroundColor = rgbCOL;
+	var RGBArr = HEXtoRGB(rgbCOL);
+	if (RGBArr[0]==0 && RGBArr[1]==0 && RGBArr[2]==0)
+	{
+		document.getElementById(LEDnum+"_val").innerHTML = "Wył."
+	}
+	else
+	{
+		//document.getElementById(LEDid+"_val").innerHTML = rgbCOL +
+		document.getElementById(LEDnum+"_val").innerHTML = RGBArr[0]+" "+RGBArr[1]+" "+RGBArr[2];
+	}
+	
+	var mesage = "Red="+RGBArr[0]+"&Green="+RGBArr[1]+"&Blue="+RGBArr[2];
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://"+ESP_IP+"/get"+LEDid+"?"+mesage, true);
+
+			//HTTPReq
+			xhr.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				console.log("ESP ODP: "+this.responseText)
+				}
+			};
+			xhr.send(null);
+}	
+
+function LEDsOFF(lNum)
+{
+
+		document.getElementById(lNum+"_inp").value = "#000000"
+		updateLED(lNum)
+	
+}
+
+//	Przekaznik 1 - 230V
+function sendSwitch(){
+	//audioClick.play();
+	var xhr = new XMLHttpRequest();
+	var swstate = document.getElementById("chk1").checked;
+	$("#chkbox1").html((swstate) ? "<font color='green'>ON</font>" : "<font color='red'>OFF</font>")
+	$("#sw1").css("color",(swstate) ? "green" : "red")
+	xhr.open("GET", "http://"+ESP_IP+"/getSW1?input1="+!swstate, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			// Odpowiedz i reakcja kiedy modul nie odpowiada
+			console.log("Odpowiedz ESP: "+this.responseText)
+			}
+		};
+		xhr.send(null);
+}
+
+//	Przekaznik 2 - 12/24V
+function sendSwitch2(){
+	//audioClick.play();
+	var xhr = new XMLHttpRequest();
+	var swstate = document.getElementById("chk2").checked;
+	$("#chkbox2").html((swstate) ? "<font color='green'>ON</font>" : "<font color='red'>OFF</font>")
+	$("#sw2").css("color",(swstate) ? "green" : "red")
+	xhr.open("GET", "http://192.168.1.51:81/getsw?sw="+swstate, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			// Odpowiedz i reakcja kiedy modul nie odpowiada
+			console.log("Odpowiedz ESP: "+this.responseText)
+			}
+		};
+		xhr.send(null);
+}
+
+function updOneLEDVal()
+{
+	var ledValState = document.getElementById("oneLedRangeVal").value;
+	$("#oneLedRangeValDisp").html(ledValState > 0 ? Math.ceil(ledValState*0.09765625)+"%" : "OFF")
+}
+
+function sendOneLEDVal(){
+	//audioMag.play()
+	var xhr = new XMLHttpRequest();
+	var ledValState = document.getElementById("oneLedRangeVal").value;
+	xhr.open("GET", "http://"+ESP_IP+"/getONE_LED_W1?input1="+ledValState, true);
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText)
+			}
+		};
+		xhr.send(null);
+}
+
+function getSendRefFrequency(update){
+	var xhr = new XMLHttpRequest();
+	if (update==="1")
+	{
+		var RF = $("#refFreq").val()
+		xhr.open("GET", "http://"+ESP_IP+"/getSetRefresh?input1="+RF, true);
+	}
+	else {xhr.open("GET", "http://"+ESP_IP+"/getSetRefresh", true);}
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			$("#refFreqHolder").html(this.responseText+" min.")
+			$("#refFreq").val(parseInt(this.responseText,10))
+			}
+		};
+		xhr.send(null);
+}
+
+function getSendRefTSFrequency(update){
+	var xhr = new XMLHttpRequest();
+	if (update==="1")
+	{
+		var RF = $("#refTSFreq").val()
+		xhr.open("GET", "http://"+ESP_IP+"/getSetTSRefresh?input1="+RF, true);
+	}
+	else {xhr.open("GET", "http://"+ESP_IP+"/getSetTSRefresh", true);}
+		xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			$("#refFreqTSHolder").html(this.responseText+" min.")
+			$("#refTSFreq").val(parseInt(this.responseText,10))
+			}
+		};
+		xhr.send(null);
+	}
+	
+// Debounce
+const debounce = (func, delay) => {
+	let debounceTimer
+	return function() {
+		const context = this
+		const args = arguments
+			clearTimeout(debounceTimer)
+				debounceTimer
+			= setTimeout(() => func.apply(context, args), delay)
+	}
+} 
+
+LED1_HUE.addEventListener('input', debounce(function() { updLedHSV('LED1') },50) )	
+LED1_SAT.addEventListener('input', debounce(function() { updLedHSV('LED1') },50) )	
+LED1_VAL.addEventListener('input', debounce(function() { updLedHSV('LED1') },50) )	
+INP_LED1.addEventListener('input', debounce(function() { updLED('LED1') },50) )	
+
+function createHSVcan(can,HUE){
+	var canvas = document.getElementById(can);
+	var ctx = canvas.getContext("2d");
+	var canW = canvas.width;
+	ctx.font = "12px Arial";
+	switch(HUE)
+	{
+	case 'H':
+		{
+		var grd = ctx.createLinearGradient(0, 0, canW, 0);
+		grd.addColorStop(0, "red");
+		grd.addColorStop(0.33, "green");
+		grd.addColorStop(0.66, "blue");
+		grd.addColorStop(1, "red");
+		ctx.fillStyle = grd;
+		ctx.fillRect(0, 0, canW, 180);
+		break;
+		}
+	case 'S':
+		{
+		var grd = ctx.createLinearGradient(0, 0, canW, 0);
+		grd.addColorStop(0, "gray");
+		grd.addColorStop(1, "red");
+		ctx.fillStyle = grd;
+		ctx.fillRect(0, 0, canW, 180);
+		break;
+		}
+	case 'V':
+		{
+		var grd = ctx.createLinearGradient(0, 0, canW, 0);
+		grd.addColorStop(0, "black");
+		grd.addColorStop(0.5, "red");
+		grd.addColorStop(1, "white");
+		ctx.fillStyle = grd;
+		ctx.fillRect(0, 0, canW, 180);
+		break;
+		}
+	}
+}
+function loadVisSettings()
+{
+	var BG = loadCookie('bg_img')
+	if (BG == 1) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG1']);
+	if (BG == 2) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG2']);
+	if (BG == 3) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG3']);
+	if (BG == 4) CSS_ROOT.style.setProperty('--bg_image', BG_LINKS_IMG['IMGBG4']);
+
+	for (let i=0; i<VISUALS.length; i++) { 
+		if (VISUALS[i].value == BG) VISUALS[i].checked = true
+	}
+
+}
+
+function loadSScookie()
+{
+	var SS = loadCookie('v_chng_ss')
+	if (SS == 1) currSite=1
+	if (SS == 2) currSite=2
+	if (SS == 3) currSite=4
+	switch(currSite)
+	{
+		case 1: {
+			$("#it1").addClass("active")
+			$("#p_left").addClass("active")
+			$("#it0").removeClass("active")
+			$("#it2").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#p_mid").removeClass("active")
+			$("#p_right").removeClass("active")
+			$("#p_ene").removeClass("active")
+			break;
+		}
+		case 2: {
+			$("#it2").addClass("active")
+			$("#p_mid").addClass("active")
+			$("#it0").removeClass("active")
+			$("#it1").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#p_left").removeClass("active")
+			$("#p_right").removeClass("active")
+			$("#p_ene").removeClass("active")
+			break;
+		}
+		case 4: {
+			$("#it0").addClass("active")
+			$("#p_ene").addClass("active")
+			$("#it1").removeClass("active")
+			$("#it2").removeClass("active")
+			$("#it3").removeClass("active")
+			$("#p_left").removeClass("active")
+			$("#p_mid").removeClass("active")
+			$("#p_right").removeClass("active")
+			break;
+		}
+	}
+	for (let i=0; i<STARTSITE.length; i++) {  if (STARTSITE[i].value == SS) STARTSITE[i].checked = true }
+
+	// DODATKOWO ZALADUJ MAX SPOT
+	var MAXs = loadCookie('v_chng_maxspot')
+	console.log("SPOT MAC ZALADOWANE Z COOKIE: "+MAXs)
+	MAXSPOTVAL = parseInt(MAXs)
+	for (let i=0; i<SPOTRES.length; i++) { if (SPOTRES[i].value == MAXSPOTVAL) SPOTRES[i].checked = true }
+	// I ZMIENNE GLOBALNE USTAWIEN
+	var GLB_1 = loadCookie('v_globSet_1')
+	console.log('Ostatni GLOB = '+GLB_1)
+	BANNER = (GLB_1 == 'true') ?  true : false
+	document.getElementById("GLB_1").checked = (GLB_1 == 'true') ?  true : false
+
+}
+
+function getFavColors(LED){
+	document.getElementById(LED+'_K1_V').style.backgroundColor = loadFavColCookie(LED+'_K1')
+	document.getElementById(LED+'_K2_V').style.backgroundColor = loadFavColCookie(LED+'_K2')
+	document.getElementById(LED+'_K3_V').style.backgroundColor = loadFavColCookie(LED+'_K3')
+	document.getElementById(LED+'_K4_V').style.backgroundColor = loadFavColCookie(LED+'_K4')
+}
+
+function loadFavColor(LED,slot){
+	var hexCol = loadFavColCookie(LED+'_K'+slot)
+	if (hexCol == "") {hexCol = '#000000'; document.getElementById('led1').style.color = '#ffffff'}
+	else document.getElementById('led1').style.color = '#242424'
+	console.log(hexCol)
+	document.getElementById('inp'+LED).value = hexCol
+	updLED(LED)
+}
+
+function turnOffLed(LED)
+{
+	document.getElementById('inp'+LED).value = '#000000'
+	updLED(LED)
+}
+
+function setCookie(cname, exdays, value) {
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	let expires = "expires="+d.toUTCString();
+	console.log('Cookie: '+cname+'='+value)
+	//showReq('Cookie: '+cname+'='+value)
+	document.cookie = cname + "=" + value + ";" + expires + ";path=/";
+}
+function loadCookie(cname) {
+	let name = cname + "=";
+	let ca = document.cookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {c = c.substring(1);}
+		if (c.indexOf(name) == 0) {return c.substring(name.length, c.length);}
+	}
+	return "";
+}
+
+function setFavColCookie(cname, exdays, slot) {
+	var hex = document.getElementById('inp'+cname).value
+	document.getElementById(cname+'_K'+slot+'_V').style.backgroundColor = hex
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	let expires = "expires="+d.toUTCString();
+	document.cookie = cname + '_K' + slot + "=" + hex + ";" + expires + ";path=/";
+}
+
+function loadFavColCookie(cname) {
+	let name = cname + "=";
+	let ca = document.cookie.split(';');
+	for(let i = 0; i < ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {c = c.substring(1);}
+		if (c.indexOf(name) == 0) {return c.substring(name.length, c.length);}
+	}
+	return "";
+}
+
+function updLedHSV(LED){
+	LED_1_HSV.H = document.getElementById(LED+'_H').value
+	LED_1_HSV.S = document.getElementById(LED+'_S').value
+	LED_1_HSV.V = document.getElementById(LED+'_V').value
+	console.log(LED_1_HSV.H+" "+LED_1_HSV.S+" "+LED_1_HSV.V)
+	//wspolczynniki		0-360(1.4117647)		0-100(0.392156862745)		0-100(0.392156862745)
+	var hex = hslToHex(LED_1_HSV.H*1.4117647, LED_1_HSV.S*0.392156862745, LED_1_HSV.V*0.392156862745)
+	document.getElementById('inp'+LED).value = hex
+	document.getElementById(LED+'_BG').style.backgroundColor = hex
+	updHSVCanvas(LED)
+	updLED(LED)
+}
+
+function updHSVCanvas(LED){
+	var canS = document.getElementById(LED+'Sat');
+	var canV = document.getElementById(LED+'Val');
+	var ctxS = canS.getContext("2d");
+	var ctxV = canV.getContext("2d");
+	var canSW = canS.width;
+	var canVW = canV.width;
+
+	var LED_HSV = {H:0, S:0, V:0}
+	LED_HSV.H = document.getElementById(LED+'_H').value
+	LED_HSV.S = document.getElementById(LED+'_S').value
+	LED_HSV.V = document.getElementById(LED+'_V').value
+	var hex = hslToHex(LED_HSV.H*1.4117647, LED_HSV.S*0.392156862745, LED_HSV.V*0.392156862745)
+
+	var grd = ctxS.createLinearGradient(0, 0, canSW, 0);
+	grd.addColorStop(0, "gray");
+	grd.addColorStop(1, hex);
+	ctxS.fillStyle = grd;
+	ctxS.fillRect(0, 0, canSW, 180);
+
+	var grd = ctxV.createLinearGradient(0, 0, canVW, 0);
+	grd.addColorStop(0, "black");
+	grd.addColorStop(0.5, hex);
+	grd.addColorStop(1, "white");
+	ctxV.fillStyle = grd;
+	ctxV.fillRect(0, 0, canVW, 180);
+}
+
+function getOutTemp(){		
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			$("#outtempholder").html('<div style="color:black;">(Na zawnątrz)<br>'+this.responseText+"</div>")
+			}
+		};
+	xhr.open("GET", "https://api.thingspeak.com/apps/thinghttp/send_request?api_key=Z7AMCOJVN5YWPD3O", true); // adres API Thinghttp(temp. na zewnatrz)
+	xhr.send();		
+}
+
+setInterval(function(){
+$("#ftr").html("Markowiak &copy "+getJSdateTime('a'))
+},1000) 
+</script>
+</html>
