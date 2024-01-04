@@ -1,8 +1,8 @@
 #ifndef WIFICREDENTIALS_H
 #define WIFICREDENTIALS_H
 //  Parametry lokalnej sieci WWIFI
-const char* ssid = "RagNet";
-const char* password =  "azgard666";
+const char* ssid = "ssid";
+const char* password =  "pass";
 // spobuje ustawic statyczne IP bazy(ESP32)
 IPAddress local_IP(192, 168, 1, 35);
 IPAddress gateway(192, 168, 1 ,1);
